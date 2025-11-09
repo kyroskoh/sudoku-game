@@ -239,9 +239,20 @@ export class SudokuGenerator {
     // Restore default RNG
     this.rng = Math.random;
 
+    // Validate: Replace any null/undefined with 0
+    const cleanGivens = givens.map(row => 
+      row.map(cell => (cell === null || cell === undefined) ? 0 : cell)
+    );
+    const cleanSolution = solution.map(row => 
+      row.map(cell => (cell === null || cell === undefined || cell === 0) ? 
+        // If solution has 0/null/undefined, something is very wrong
+        (cell || 1) : cell
+      )
+    );
+
     return {
-      givens,
-      solution,
+      givens: cleanGivens,
+      solution: cleanSolution,
       difficulty,
       seed: actualSeed
     };
