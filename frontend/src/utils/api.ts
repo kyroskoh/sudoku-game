@@ -84,11 +84,20 @@ class ApiClient {
   }
 
   /**
-   * Get leaderboard
+   * Get leaderboard for a specific puzzle
    */
   async getLeaderboard(puzzleId: string, limit: number = 10): Promise<LeaderboardEntry[]> {
     const response = await fetch(`${API_BASE}/leaderboard?puzzleId=${puzzleId}&limit=${limit}`);
     if (!response.ok) throw new Error('Failed to fetch leaderboard');
+    return response.json();
+  }
+
+  /**
+   * Get global leaderboard for a mode and difficulty
+   */
+  async getGlobalLeaderboard(mode: GameMode, difficulty: Difficulty, limit: number = 10): Promise<LeaderboardEntry[]> {
+    const response = await fetch(`${API_BASE}/leaderboard/global?mode=${mode}&difficulty=${difficulty}&limit=${limit}`);
+    if (!response.ok) throw new Error('Failed to fetch global leaderboard');
     return response.json();
   }
 

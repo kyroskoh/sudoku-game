@@ -8,19 +8,42 @@ import { useGameStore } from '../store/gameStore';
 import { Grid } from '../components/Grid';
 import { NumberPad } from '../components/NumberPad';
 import { Controls } from '../components/Controls';
+import { NameEntryModal } from '../components/NameEntryModal';
 import { api } from '../utils/api';
-import { getDeviceId } from '../utils/localStorage';
+import { getDeviceId, getStoredName } from '../utils/localStorage';
 import styles from './GamePage.module.css';
 
 export const DailyGame: React.FC = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [streak, setStreak] = useState({ currentStreak: 0, lastPlayedDate: null });
+  const [showNameEntry, setShowNameEntry] = useState(false);
+  const [completionAcknowledged, setCompletionAcknowledged] = useState(false);
   const { loadPuzzle, startGame, isComplete } = useGameStore();
 
   useEffect(() => {
     loadDailyPuzzle();
   }, []);
+
+  // Show name entry modal when puzzle is completed
+  useEffect(() => {
+    if (isComplete && !completionAcknowledged) {
+      const storedName = getStoredName();
+      if (!storedName) {
+        setShowNameEntry(true);
+      }
+    }
+  }, [isComplete, completionAcknowledged]);
+
+  const handleNameSubmit = () => {
+    setShowNameEntry(false);
+    setCompletionAcknowledged(true);
+  };
+
+  const handleNameSkip = () => {
+    setShowNameEntry(false);
+    setCompletionAcknowledged(true);
+  };
 
   const loadDailyPuzzle = async () => {
     setLoading(true);
@@ -72,7 +95,13 @@ export const DailyGame: React.FC = () => {
         <NumberPad />
       </div>
 
-      {isComplete && (
+      <NameEntryModal
+        isOpen={showNameEntry}
+        onSubmit={handleNameSubmit}
+        onSkip={handleNameSkip}
+      />
+
+      {isComplete && completionAcknowledged && (
         <div className={styles.completionModal}>
           <div className={styles.modalContent}>
             <h2 className={styles.modalTitle}>🎉 Daily Puzzle Complete!</h2>

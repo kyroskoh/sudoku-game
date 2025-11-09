@@ -34,12 +34,13 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({
 
     try {
       if (puzzleId) {
+        // Specific puzzle leaderboard
         const data = await api.getLeaderboard(puzzleId);
         setEntries(data);
       } else {
-        // For now, we'll just show empty state
-        // In a full implementation, you'd fetch based on mode/difficulty
-        setEntries([]);
+        // Global leaderboard for mode/difficulty
+        const data = await api.getGlobalLeaderboard(mode, difficulty);
+        setEntries(data);
       }
     } catch (err) {
       console.error('Error loading leaderboard:', err);
@@ -130,9 +131,10 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({
                   </span>
                 </td>
                 <td>
-                  {entry.userId ? `User ${entry.userId.slice(0, 8)}` : 
+                  {entry.displayName || 
+                   (entry.userId ? `User ${entry.userId.slice(0, 8)}` : 
                    entry.deviceId ? `Player ${entry.deviceId.slice(0, 8)}` : 
-                   'Anonymous'}
+                   'Anonymous')}
                 </td>
                 <td className={styles.time}>{formatTime(entry.timeMs)}</td>
                 <td>{new Date(entry.createdAt).toLocaleDateString()}</td>

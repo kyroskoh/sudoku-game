@@ -79,6 +79,7 @@ export interface LeaderboardEntry {
   puzzleId: string;
   userId?: string;
   deviceId?: string;
+  displayName?: string;
   timeMs: number;
   createdAt: Date;
 }

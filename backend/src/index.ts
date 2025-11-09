@@ -12,6 +12,7 @@ import dailyRouter from './routes/daily';
 import leaderboardRouter from './routes/leaderboard';
 import syncRouter from './routes/sync';
 import statsRouter from './routes/stats';
+import deviceRouter from './routes/device';
 
 // Load environment variables
 dotenv.config();
@@ -41,6 +42,7 @@ app.use('/api/daily', dailyRouter);
 app.use('/api/leaderboard', leaderboardRouter);
 app.use('/api/sync', syncRouter);
 app.use('/api/stats', statsRouter);
+app.use('/api/device', deviceRouter);
 
 // Root endpoint
 app.get('/', (req: Request, res: Response) => {

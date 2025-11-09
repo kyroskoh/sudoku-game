@@ -8,7 +8,9 @@ import { useGameStore } from '../store/gameStore';
 import { Grid } from '../components/Grid';
 import { NumberPad } from '../components/NumberPad';
 import { Controls } from '../components/Controls';
+import { NameEntryModal } from '../components/NameEntryModal';
 import { api } from '../utils/api';
+import { getStoredName } from '../utils/localStorage';
 import type { Difficulty } from '../types';
 import styles from './GamePage.module.css';
 
@@ -17,6 +19,8 @@ export const CasualGame: React.FC = () => {
   const [selectedDifficulty, setSelectedDifficulty] = useState<Difficulty>('easy');
   const [loading, setLoading] = useState(false);
   const [showSelector, setShowSelector] = useState(true);
+  const [showNameEntry, setShowNameEntry] = useState(false);
+  const [completionAcknowledged, setCompletionAcknowledged] = useState(false);
   const { puzzle, loadPuzzle, startGame, isComplete, resetGame } = useGameStore();
 
   // Clear puzzle when entering casual mode to show difficulty selection
@@ -24,6 +28,17 @@ export const CasualGame: React.FC = () => {
     resetGame();
     setShowSelector(true);
   }, []);
+
+  // Show name entry modal when puzzle is completed
+  useEffect(() => {
+    if (isComplete && !completionAcknowledged) {
+      // Only show name entry if no name is stored yet
+      const storedName = getStoredName();
+      if (!storedName) {
+        setShowNameEntry(true);
+      }
+    }
+  }, [isComplete, completionAcknowledged]);
 
   const difficulties: Difficulty[] = ['easy', 'medium', 'hard', 'expert', 'extreme'];
 
@@ -45,11 +60,26 @@ export const CasualGame: React.FC = () => {
   const handleNewGame = () => {
     resetGame();
     setShowSelector(true);
+    setCompletionAcknowledged(false);
+    setShowNameEntry(false);
   };
 
   const handleChangeDifficulty = () => {
     resetGame();
     setShowSelector(true);
+    setCompletionAcknowledged(false);
+    setShowNameEntry(false);
+  };
+
+  const handleNameSubmit = () => {
+    setShowNameEntry(false);
+    setCompletionAcknowledged(true);
+    // Name is already stored by the modal
+  };
+
+  const handleNameSkip = () => {
+    setShowNameEntry(false);
+    setCompletionAcknowledged(true);
   };
 
   if (loading) {
@@ -115,7 +145,13 @@ export const CasualGame: React.FC = () => {
         <NumberPad />
       </div>
 
-      {isComplete && (
+      <NameEntryModal
+        isOpen={showNameEntry}
+        onSubmit={handleNameSubmit}
+        onSkip={handleNameSkip}
+      />
+
+      {isComplete && completionAcknowledged && (
         <div className={styles.completionModal}>
           <div className={styles.modalContent}>
             <h2 className={styles.modalTitle}>🎉 Congratulations!</h2>

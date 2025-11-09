@@ -151,9 +151,24 @@ export class AttemptService {
    * Update leaderboard for a completed attempt
    */
   private async updateLeaderboard(attempt: any): Promise<void> {
-    // Only add to leaderboard for daily and challenge modes
-    if (attempt.mode !== 'daily' && attempt.mode !== 'challenge') {
+    // Track ALL modes now (casual, daily, challenge)
+    // Only skip if attempt wasn't completed or has no time
+    if (!attempt.timeMs || attempt.result !== 'completed') {
       return;
+    }
+
+    // Get displayName from device or user
+    let displayName: string | null = null;
+    if (attempt.deviceId) {
+      const device = await prisma.device.findUnique({
+        where: { id: attempt.deviceId }
+      });
+      displayName = device?.displayName || null;
+    } else if (attempt.userId) {
+      const user = await prisma.user.findUnique({
+        where: { id: attempt.userId }
+      });
+      displayName = user?.displayName || null;
     }
 
     await prisma.leaderboard.create({
@@ -161,6 +176,7 @@ export class AttemptService {
         puzzleId: attempt.puzzleId,
         userId: attempt.userId,
         deviceId: attempt.deviceId,
+        displayName,
         timeMs: attempt.timeMs
       }
     });

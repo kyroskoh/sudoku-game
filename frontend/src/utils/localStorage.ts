@@ -11,7 +11,8 @@ const KEYS = {
   SETTINGS: 'sudoku.settings',
   PROGRESS: 'sudoku.progress',
   STATS: 'sudoku.stats',
-  QUEUE: 'sudoku.queue'
+  QUEUE: 'sudoku.queue',
+  DISPLAY_NAME: 'sudoku.displayName'
 };
 
 /**
@@ -158,5 +159,26 @@ export function serializeNotes(notes: Set<number>[][]): number[][][] {
  */
 export function deserializeNotes(notes: number[][][]): Set<number>[][] {
   return notes.map(row => row.map(cell => new Set(cell)));
+}
+
+/**
+ * Get stored display name
+ */
+export function getStoredName(): string | null {
+  return localStorage.getItem(KEYS.DISPLAY_NAME);
+}
+
+/**
+ * Store display name
+ */
+export function storeName(name: string): void {
+  localStorage.setItem(KEYS.DISPLAY_NAME, name);
+}
+
+/**
+ * Clear display name
+ */
+export function clearName(): void {
+  localStorage.removeItem(KEYS.DISPLAY_NAME);
 }
 

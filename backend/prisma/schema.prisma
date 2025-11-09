@@ -21,11 +21,12 @@ model User {
 }
 
 model Device {
-  id        String    @id @default(uuid())
-  userId    String?
-  user      User?     @relation(fields: [userId], references: [id])
-  createdAt DateTime  @default(now())
-  attempts  Attempt[]
+  id          String    @id @default(uuid())
+  userId      String?
+  displayName String?
+  user        User?     @relation(fields: [userId], references: [id])
+  createdAt   DateTime  @default(now())
+  attempts    Attempt[]
 
   @@index([userId])
 }
@@ -72,13 +73,14 @@ model Attempt {
 }
 
 model Leaderboard {
-  id        String   @id @default(uuid())
-  puzzleId  String
-  userId    String?
-  deviceId  String?
-  timeMs    Int
-  createdAt DateTime @default(now())
-  puzzle    Puzzle   @relation(fields: [puzzleId], references: [id])
+  id          String   @id @default(uuid())
+  puzzleId    String
+  userId      String?
+  deviceId    String?
+  displayName String?
+  timeMs      Int
+  createdAt   DateTime @default(now())
+  puzzle      Puzzle   @relation(fields: [puzzleId], references: [id])
 
   @@index([puzzleId, timeMs])
 }
