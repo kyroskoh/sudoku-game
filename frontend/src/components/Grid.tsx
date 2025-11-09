@@ -2,7 +2,7 @@
  * Sudoku Grid Component
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useGameStore } from '../store/gameStore';
 import styles from './Grid.module.css';
 
@@ -13,13 +13,70 @@ export const Grid: React.FC = () => {
     notes,
     selectedCell,
     settings,
+    isComplete,
     selectCell,
     setCellValue,
     toggleNote,
-    inputMode
+    inputMode,
+    completeGame
   } = useGameStore();
 
   if (!puzzle) return null;
+
+  // Check for puzzle completion whenever board changes
+  useEffect(() => {
+    if (!puzzle || isComplete) return;
+
+    // Check if board is completely filled
+    const isFilled = board.every(row => row.every(cell => cell !== 0));
+    
+    if (isFilled) {
+      // Check if solution is valid
+      const isValid = checkSolution(board);
+      if (isValid) {
+        completeGame();
+      }
+    }
+  }, [board, puzzle, isComplete, completeGame]);
+
+  // Validate the solution
+  const checkSolution = (currentBoard: number[][]): boolean => {
+    // Check rows
+    for (let row = 0; row < 9; row++) {
+      const seen = new Set<number>();
+      for (let col = 0; col < 9; col++) {
+        const value = currentBoard[row][col];
+        if (value < 1 || value > 9 || seen.has(value)) return false;
+        seen.add(value);
+      }
+    }
+
+    // Check columns
+    for (let col = 0; col < 9; col++) {
+      const seen = new Set<number>();
+      for (let row = 0; row < 9; row++) {
+        const value = currentBoard[row][col];
+        if (seen.has(value)) return false;
+        seen.add(value);
+      }
+    }
+
+    // Check 3x3 boxes
+    for (let boxRow = 0; boxRow < 9; boxRow += 3) {
+      for (let boxCol = 0; boxCol < 9; boxCol += 3) {
+        const seen = new Set<number>();
+        for (let i = 0; i < 3; i++) {
+          for (let j = 0; j < 3; j++) {
+            const value = currentBoard[boxRow + i][boxCol + j];
+            if (seen.has(value)) return false;
+            seen.add(value);
+          }
+        }
+      }
+    }
+
+    return true;
+  };
 
   const handleCellClick = (row: number, col: number) => {
     selectCell(row, col);
