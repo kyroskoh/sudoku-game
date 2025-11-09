@@ -16,7 +16,7 @@ interface PuzzleResult {
 export class SudokuGenerator {
   private readonly SIZE = 9;
   private readonly BOX_SIZE = 3;
-  private rng: () => number;
+  private rng: () => number = Math.random;
 
   /**
    * Generate a complete valid Sudoku solution
