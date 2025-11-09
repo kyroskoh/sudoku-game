@@ -1,10 +1,13 @@
 # Backend Dockerfile for Sudoku Mastery
-FROM node:18-alpine AS builder
+# Using Debian slim for better Prisma compatibility
+FROM node:18-slim AS builder
 
 WORKDIR /app
 
-# Install OpenSSL 1.1 compatibility for Prisma
-RUN apk add --no-cache openssl1.1-compat libc6-compat
+# Install OpenSSL and other required libraries
+RUN apt-get update -y && \
+    apt-get install -y openssl ca-certificates && \
+    rm -rf /var/lib/apt/lists/*
 
 # Copy package files
 COPY package*.json ./
@@ -23,12 +26,14 @@ RUN npm run prisma:generate
 RUN npm run build
 
 # Production stage
-FROM node:18-alpine
+FROM node:18-slim
 
 WORKDIR /app
 
-# Install OpenSSL 1.1 compatibility and other required libraries for Prisma
-RUN apk add --no-cache openssl1.1-compat libc6-compat
+# Install OpenSSL and other required libraries
+RUN apt-get update -y && \
+    apt-get install -y openssl ca-certificates && \
+    rm -rf /var/lib/apt/lists/*
 
 # Copy package files
 COPY package*.json ./
