@@ -133,6 +133,7 @@
 @media (max-width: 768px) {
   .modal {
     padding: 2rem;
+    width: 95%;
   }
 
   .title {
@@ -145,6 +146,50 @@
 
   .input {
     font-size: 1rem;
+    padding: 0.9rem;
+  }
+
+  .submitButton {
+    font-size: 1rem;
+    padding: 0.9rem 1.5rem;
+  }
+
+  .skipButton {
+    font-size: 0.95rem;
+    padding: 0.7rem 1.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal {
+    padding: 1.5rem;
+  }
+
+  .title {
+    font-size: 1.3rem;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+  }
+
+  .input {
+    font-size: 0.95rem;
+    padding: 0.8rem;
+  }
+
+  .submitButton {
+    font-size: 0.95rem;
+    padding: 0.8rem 1.2rem;
+  }
+
+  .skipButton {
+    font-size: 0.9rem;
+    padding: 0.6rem 1rem;
+  }
+
+  .hint {
+    font-size: 0.85rem;
   }
 }
 

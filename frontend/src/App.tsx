@@ -5,6 +5,7 @@
 import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Header } from './components/Header';
+import { Footer } from './components/Footer';
 import { Home } from './pages/Home';
 import { CasualGame } from './pages/CasualGame';
 import { DailyGame } from './pages/DailyGame';
@@ -44,6 +45,7 @@ function App() {
         <Route path="/challenge" element={<ChallengeGame />} />
         <Route path="/leaderboard" element={<LeaderboardPage />} />
       </Routes>
+      <Footer />
     </BrowserRouter>
   );
 }

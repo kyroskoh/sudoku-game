@@ -57,6 +57,14 @@
 }
 
 @media (max-width: 768px) {
+  .page {
+    padding: 1rem 0.5rem;
+  }
+
+  .hero {
+    margin-bottom: 1.5rem;
+  }
+
   .title {
     font-size: 2rem;
   }
@@ -67,10 +75,44 @@
 
   .info {
     padding: 1.5rem;
+    margin: 2rem auto;
+  }
+
+  .info h3 {
+    font-size: 1.3rem;
   }
 
   .info li {
     font-size: 1rem;
+    padding: 0.6rem 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .page {
+    padding: 0.75rem 0.25rem;
+  }
+
+  .title {
+    font-size: 1.8rem;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+  }
+
+  .info {
+    padding: 1rem;
+    margin: 1.5rem 0.5rem;
+  }
+
+  .info h3 {
+    font-size: 1.2rem;
+  }
+
+  .info li {
+    font-size: 0.95rem;
+    padding: 0.5rem 0;
   }
 }
 

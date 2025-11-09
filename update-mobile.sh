@@ -1,0 +1,52 @@
+#!/bin/bash
+# Quick update script for mobile-friendly UI and developer credits
+
+echo "🚀 Updating Sudoku Mastery - Mobile UI & Developer Credits..."
+echo ""
+echo "✨ New Features:"
+echo "  - 📱 Mobile-Friendly Responsive Design"
+echo "  - 👨‍💻 Developer Credits Footer (Kyros Koh)"
+echo "  - 📧 Email: me@kyroskoh.com"
+echo "  - 🐙 GitHub: github.com/kyroskoh"
+echo "  - 🎨 Enhanced Mobile Meta Tags"
+echo "  - 📏 Responsive Typography & Spacing"
+echo "  - 👆 Touch-Friendly Controls"
+echo "  - 💯 All Devices Supported"
+echo ""
+
+# Push to repository
+echo "📤 Pushing to repository..."
+git add .
+git commit -m "Add mobile-friendly UI and developer credits (Kyros Koh)" || echo "Nothing to commit"
+git push origin main
+
+echo ""
+echo "✅ Done! Now deploy on your server:"
+echo ""
+echo "  ssh sudoku@breezehost-jp"
+echo "  cd ~/sudoku-game"
+echo "  git pull"
+echo "  sudo docker compose down"
+echo "  sudo docker compose build --no-cache"
+echo "  sudo docker compose up -d"
+echo ""
+echo "🌐 Then test on your devices:"
+echo "  - 💻 Desktop: https://sudoku.kyros.party"
+echo "  - 📱 Mobile Phone: https://sudoku.kyros.party"
+echo "  - 📱 Tablet: https://sudoku.kyros.party"
+echo ""
+echo "✅ Check mobile responsiveness:"
+echo "  - Tap the grid cells (should be easy to tap)"
+echo "  - Use number pad (large buttons)"
+echo "  - Scroll to bottom (see developer footer)"
+echo "  - Tap links in footer (email & GitHub)"
+echo "  - Try all game modes"
+echo "  - Check leaderboard table"
+echo ""
+echo "📝 Notes:"
+echo "  - Footer appears on all pages"
+echo "  - Responsive from 320px to 4K"
+echo "  - Touch-optimized controls"
+echo "  - No backend changes needed"
+echo ""
+
