@@ -1,31 +1,49 @@
 /**
  * Daily Puzzle Service
  * Manages daily puzzle generation and retrieval
+ * Daily puzzles reset at 12:00 AM Singapore Time (SGT/UTC+8)
+ * 
+ * Security: Puzzle seeds are salted with PUZZLE_SALT from environment
+ * to prevent players from reproducing puzzles and cheating.
  */
 
 import { PrismaClient } from '@prisma/client';
 import { sudokuGenerator, Difficulty } from './sudoku-generator';
+import crypto from 'crypto';
 
 const prisma = new PrismaClient();
 
+// Singapore Time is UTC+8
+const SGT_TIMEZONE = 'Asia/Singapore';
+const SGT_OFFSET_HOURS = 8;
+
+// Get puzzle salt from environment (fallback to default for development)
+const PUZZLE_SALT = process.env.PUZZLE_SALT || 'default_sudoku_salt_change_in_production';
+
 export class DailyPuzzleService {
   /**
-   * Get or create today's daily puzzle
+   * Get or create today's daily puzzle for a specific difficulty (based on SGT timezone)
    */
-  async getTodaysPuzzle(timezone: string = 'UTC'): Promise<any> {
-    const today = this.getTodayDate(timezone);
+  async getTodaysPuzzle(difficulty: Difficulty, userId?: string, deviceId?: string): Promise<any> {
+    const todaySGT = this.getTodayDateSGT();
+    const dateKey = this.getDateKey(todaySGT, difficulty);
     
-    // Try to find existing puzzle for today
+    console.log(`[Daily Puzzle] Requesting ${difficulty} puzzle for SGT date: ${dateKey}`);
+    
+    // Try to find existing puzzle for today with this difficulty
     let puzzle = await prisma.puzzle.findFirst({
       where: {
         mode: 'daily',
-        date: today
+        seed: dateKey // Use seed as unique identifier for the date + difficulty
       }
     });
 
     // If doesn't exist, generate it
     if (!puzzle) {
-      puzzle = await this.generateDailyPuzzle(today);
+      console.log(`[Daily Puzzle] Generating new puzzle for ${dateKey}`);
+      puzzle = await this.generateDailyPuzzle(todaySGT, dateKey, difficulty);
+    } else {
+      console.log(`[Daily Puzzle] Found existing puzzle for ${dateKey}`);
     }
 
     // TypeScript guard: puzzle is guaranteed to exist at this point
@@ -38,28 +56,31 @@ export class DailyPuzzleService {
       givens: JSON.parse(puzzle.givens),
       difficulty: puzzle.difficulty,
       date: puzzle.date,
-      mode: puzzle.mode
+      mode: puzzle.mode,
+      seed: puzzle.seed
     };
   }
 
   /**
-   * Generate daily puzzle for a specific date
+   * Generate daily puzzle for a specific date and difficulty with deterministic seed
+   * The seed is salted with PUZZLE_SALT to prevent players from cheating by reproducing puzzles
    */
-  private async generateDailyPuzzle(date: Date): Promise<any> {
-    // Use date as seed for reproducibility
-    const seed = this.getDateSeed(date);
+  private async generateDailyPuzzle(date: Date, dateKey: string, difficulty: Difficulty): Promise<any> {
+    // Create salted seed for actual puzzle generation (not stored in DB)
+    const saltedSeed = this.createSaltedSeed(dateKey);
     
-    // Rotate difficulty through the week
-    const difficulty = this.getDifficultyForDate(date);
+    console.log(`[Daily Puzzle] Generating ${difficulty} puzzle with seed: ${dateKey} (salted)`);
     
-    const puzzleData = sudokuGenerator.generatePuzzle(difficulty, seed);
+    // Generate puzzle using salted seed
+    const puzzleData = sudokuGenerator.generatePuzzle(difficulty, saltedSeed);
 
+    // Store with original dateKey (not salted) for consistency and lookup
     const puzzle = await prisma.puzzle.create({
       data: {
         mode: 'daily',
         difficulty,
         date,
-        seed,
+        seed: dateKey, // Store unsalted seed for lookup and display
         givens: JSON.stringify(puzzleData.givens),
         solution: JSON.stringify(puzzleData.solution)
       }
@@ -69,39 +90,69 @@ export class DailyPuzzleService {
   }
 
   /**
-   * Get date seed for reproducibility
+   * Create a salted seed to prevent players from reproducing puzzles
+   * Combines the date key with a secret salt using SHA-256
    */
-  private getDateSeed(date: Date): string {
-    return `daily-${date.toISOString().split('T')[0]}`;
-  }
-
-  /**
-   * Get difficulty based on day of week
-   */
-  private getDifficultyForDate(date: Date): Difficulty {
-    const dayOfWeek = date.getDay(); // 0 = Sunday, 6 = Saturday
+  private createSaltedSeed(dateKey: string): string {
+    const hash = crypto
+      .createHash('sha256')
+      .update(dateKey + PUZZLE_SALT)
+      .digest('hex');
     
-    const difficultyMap: { [key: number]: Difficulty } = {
-      0: 'easy',    // Sunday
-      1: 'easy',    // Monday
-      2: 'medium',  // Tuesday
-      3: 'medium',  // Wednesday
-      4: 'hard',    // Thursday
-      5: 'hard',    // Friday
-      6: 'expert'   // Saturday
-    };
-
-    return difficultyMap[dayOfWeek];
+    // Return first 32 characters of hash for a deterministic but unpredictable seed
+    return `salted_${hash.substring(0, 32)}`;
   }
 
   /**
-   * Get today's date at 00:00:00
+   * Get date key for SGT date with difficulty (format: daily-YYYY-MM-DD-{difficulty})
+   * This ensures everyone gets the same puzzle each day for each difficulty
    */
-  private getTodayDate(timezone: string): Date {
+  private getDateKey(date: Date, difficulty: Difficulty): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `daily-${year}-${month}-${day}-${difficulty}`;
+  }
+
+  /**
+   * Get today's date at 00:00:00 in Singapore Time (SGT)
+   * SGT is UTC+8, no daylight saving time
+   */
+  private getTodayDateSGT(): Date {
+    // Get current time in SGT
     const now = new Date();
-    const today = new Date(now.toLocaleDateString('en-US', { timeZone: timezone }));
-    today.setHours(0, 0, 0, 0);
-    return today;
+    const sgtString = now.toLocaleString('en-US', { timeZone: SGT_TIMEZONE });
+    const sgtDate = new Date(sgtString);
+    
+    // Set to midnight SGT
+    sgtDate.setHours(0, 0, 0, 0);
+    
+    return sgtDate;
+  }
+
+  /**
+   * Get current SGT time info (for debugging/logging)
+   */
+  getSGTInfo(): { currentSGT: string; date: string; nextResetIn: string } {
+    const now = new Date();
+    const sgtNow = new Date(now.toLocaleString('en-US', { timeZone: SGT_TIMEZONE }));
+    const todaySGT = this.getTodayDateSGT();
+    const tomorrowSGT = new Date(todaySGT);
+    tomorrowSGT.setDate(tomorrowSGT.getDate() + 1);
+    
+    const timeUntilReset = tomorrowSGT.getTime() - sgtNow.getTime();
+    const hoursUntilReset = Math.floor(timeUntilReset / (1000 * 60 * 60));
+    const minutesUntilReset = Math.floor((timeUntilReset % (1000 * 60 * 60)) / (1000 * 60));
+    
+    const year = todaySGT.getFullYear();
+    const month = String(todaySGT.getMonth() + 1).padStart(2, '0');
+    const day = String(todaySGT.getDate()).padStart(2, '0');
+    
+    return {
+      currentSGT: sgtNow.toLocaleString('en-US', { timeZone: SGT_TIMEZONE }),
+      date: `${year}-${month}-${day}`,
+      nextResetIn: `${hoursUntilReset}h ${minutesUntilReset}m`
+    };
   }
 
   /**

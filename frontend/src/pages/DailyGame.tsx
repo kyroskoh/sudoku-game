@@ -11,18 +11,23 @@ import { Controls } from '../components/Controls';
 import { NameEntryModal } from '../components/NameEntryModal';
 import { api } from '../utils/api';
 import { getDeviceId, getStoredName } from '../utils/localStorage';
+import type { Difficulty } from '../types';
 import styles from './GamePage.module.css';
 
 export const DailyGame: React.FC = () => {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
+  const [selectedDifficulty, setSelectedDifficulty] = useState<Difficulty>('medium');
+  const [loading, setLoading] = useState(false);
+  const [showSelector, setShowSelector] = useState(true);
   const [streak, setStreak] = useState({ currentStreak: 0, lastPlayedDate: null });
   const [showNameEntry, setShowNameEntry] = useState(false);
   const [completionAcknowledged, setCompletionAcknowledged] = useState(false);
-  const { loadPuzzle, startGame, isComplete } = useGameStore();
+  const { puzzle, loadPuzzle, startGame, isComplete, resetGame } = useGameStore();
 
+  // Clear puzzle when entering daily mode to show difficulty selection
   useEffect(() => {
-    loadDailyPuzzle();
+    resetGame();
+    setShowSelector(true);
   }, []);
 
   // Show name entry modal when puzzle is completed
@@ -45,20 +50,30 @@ export const DailyGame: React.FC = () => {
     setCompletionAcknowledged(true);
   };
 
-  const loadDailyPuzzle = async () => {
+  const difficulties: Difficulty[] = ['easy', 'medium', 'hard', 'expert', 'extreme'];
+
+  const handleStartDaily = async () => {
     setLoading(true);
     try {
       const deviceId = getDeviceId();
-      const response = await api.getDailyPuzzle(undefined, deviceId);
+      const response = await api.getDailyPuzzle(selectedDifficulty, undefined, deviceId);
       loadPuzzle(response.puzzle);
       setStreak(response.streak);
       startGame();
+      setShowSelector(false);
     } catch (error) {
       console.error('Error loading daily puzzle:', error);
       alert('Failed to load daily puzzle. Please try again.');
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleChangeDifficulty = () => {
+    resetGame();
+    setShowSelector(true);
+    setCompletionAcknowledged(false);
+    setShowNameEntry(false);
   };
 
   if (loading) {
@@ -69,16 +84,72 @@ export const DailyGame: React.FC = () => {
     );
   }
 
+  if (!puzzle || showSelector) {
+    return (
+      <div className={styles.gamePage}>
+        <div className={styles.header}>
+          <h1 className={styles.title}>📅 Daily Challenge</h1>
+          <p className={styles.subtitle}>
+            {new Date().toLocaleDateString('en-US', {
+              weekday: 'long',
+              month: 'long',
+              day: 'numeric',
+              year: 'numeric'
+            })}
+          </p>
+          <p className={styles.subtitle}>🔥 Current Streak: {streak.currentStreak} days</p>
+        </div>
+
+        <div className={styles.difficultySelector}>
+          <label className={styles.difficultyLabel}>Select Today's Difficulty:</label>
+          <div className={styles.difficultyButtons}>
+            {difficulties.map((diff) => (
+              <button
+                key={diff}
+                className={`${styles.difficultyButton} ${
+                  selectedDifficulty === diff ? styles.selected : ''
+                }`}
+                onClick={() => setSelectedDifficulty(diff)}
+                aria-label={`Select ${diff} difficulty`}
+              >
+                {diff.charAt(0).toUpperCase() + diff.slice(1)}
+              </button>
+            ))}
+          </div>
+          <button 
+            className={styles.startButton} 
+            onClick={handleStartDaily}
+            disabled={loading}
+          >
+            {loading ? 'Loading...' : `Start ${selectedDifficulty.charAt(0).toUpperCase() + selectedDifficulty.slice(1)} Daily`}
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={styles.gamePage}>
       <div className={styles.header}>
-        <h1 className={styles.title}>📅 Daily Puzzle</h1>
-        <p className={styles.subtitle}>{new Date().toLocaleDateString('en-US', {
-          weekday: 'long',
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric'
-        })}</p>
+        <h1 className={styles.title}>📅 Daily - {puzzle.difficulty}</h1>
+        <p className={styles.subtitle}>
+          {new Date().toLocaleDateString('en-US', {
+            weekday: 'long',
+            month: 'long',
+            day: 'numeric',
+            year: 'numeric'
+          })}
+        </p>
+        <p className={styles.subtitle} style={{ fontSize: '0.9rem', opacity: 0.7, marginTop: '0.5rem' }}>
+          Puzzle: {puzzle.seed || `${puzzle.mode}-${puzzle.difficulty}`}
+        </p>
+        <button 
+          className={styles.secondaryButton}
+          onClick={handleChangeDifficulty}
+          style={{ marginTop: '1rem' }}
+        >
+          ← Change Difficulty
+        </button>
         
         {streak.currentStreak > 0 && (
           <div className={styles.streakInfo}>

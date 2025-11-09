@@ -130,6 +130,9 @@ export const CasualGame: React.FC = () => {
     <div className={styles.gamePage}>
       <div className={styles.header}>
         <h1 className={styles.title}>Casual - {puzzle.difficulty}</h1>
+        <p className={styles.subtitle} style={{ fontSize: '0.9rem', opacity: 0.7 }}>
+          Puzzle: {puzzle.seed || `casual-${puzzle.id?.slice(0, 8)}`}
+        </p>
         <button 
           className={styles.secondaryButton}
           onClick={handleChangeDifficulty}

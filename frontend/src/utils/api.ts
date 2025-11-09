@@ -18,10 +18,11 @@ class ApiClient {
   }
 
   /**
-   * Get daily puzzle
+   * Get daily puzzle for a specific difficulty
    */
-  async getDailyPuzzle(userId?: string, deviceId?: string): Promise<{ puzzle: Puzzle; streak: any }> {
+  async getDailyPuzzle(difficulty: Difficulty, userId?: string, deviceId?: string): Promise<{ puzzle: Puzzle; streak: any }> {
     const params = new URLSearchParams();
+    params.append('difficulty', difficulty);
     if (userId) params.append('userId', userId);
     if (deviceId) params.append('deviceId', deviceId);
     

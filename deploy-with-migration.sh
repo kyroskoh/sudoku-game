@@ -4,6 +4,14 @@
 echo "🚀 Deploying Sudoku Mastery..."
 echo ""
 
+# Check if PUZZLE_SALT is set
+if [ ! -f backend/.env ]; then
+  echo "⚠️  WARNING: backend/.env not found!"
+  echo "Please create backend/.env with PUZZLE_SALT"
+  echo "See backend/.env.example for template"
+  exit 1
+fi
+
 # Stop containers
 echo "🛑 Stopping containers..."
 sudo docker compose down
