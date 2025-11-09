@@ -50,14 +50,52 @@ echo ""
 
 # Step 6: Wait for backend to be ready
 echo "⏳ Step 6: Waiting for backend to initialize..."
-sleep 10
-echo "✅ Backend ready"
+sleep 5
+
+# Check if backend is actually running
+if ! docker compose ps | grep -q "sudoku-backend.*running"; then
+    echo "❌ Backend container is not running!"
+    echo ""
+    echo "📊 Checking logs..."
+    docker compose logs --tail=30 sudoku-backend
+    echo ""
+    echo "❌ Deployment failed. Please check the logs above."
+    echo ""
+    echo "Common issues:"
+    echo "   - Missing backend/.env file"
+    echo "   - Database needs migration: docker compose exec sudoku-backend npx prisma migrate deploy"
+    echo "   - Port 3011 already in use"
+    echo ""
+    exit 1
+fi
+
+echo "✅ Backend is running"
+echo ""
+
+# Wait a bit more for backend to fully initialize
+echo "⏳ Waiting for backend to fully initialize..."
+sleep 5
+
+# Test backend health
+HEALTH_CHECK=$(curl -s http://localhost:3011/health || echo "failed")
+if [[ "$HEALTH_CHECK" == "failed" ]] || [[ "$HEALTH_CHECK" == *"error"* ]]; then
+    echo "⚠️  Warning: Backend health check failed"
+    echo "   Response: $HEALTH_CHECK"
+    echo "   Continuing anyway..."
+else
+    echo "✅ Backend health check passed"
+fi
 echo ""
 
 # Step 7: Clear today's buggy daily puzzle
 echo "🗑️  Step 7: Clearing today's cached daily puzzle..."
-docker compose exec -T sudoku-backend node clear-daily-puzzle.js
-echo "✅ Cache cleared"
+if docker compose exec -T sudoku-backend node clear-daily-puzzle.js; then
+    echo "✅ Cache cleared"
+else
+    echo "⚠️  Warning: Could not clear cache automatically"
+    echo "   You can run this manually later:"
+    echo "   docker compose exec -T sudoku-backend node clear-daily-puzzle.js"
+fi
 echo ""
 
 # Step 8: Test the fix
