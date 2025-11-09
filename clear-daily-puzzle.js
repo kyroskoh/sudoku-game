@@ -1,6 +1,10 @@
 /**
  * Clear Today's Daily Puzzle
  * Run this to regenerate today's daily puzzle after fixing the bug
+ * 
+ * Usage:
+ *   Local: node clear-daily-puzzle.js
+ *   Docker: docker compose exec -T sudoku-backend node clear-daily-puzzle.js
  */
 
 const { PrismaClient } = require('@prisma/client');
