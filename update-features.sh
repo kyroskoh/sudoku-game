@@ -14,13 +14,15 @@ echo "  - ⏱️ Complete Time Recording for ALL Modes"
 echo "  - 🌏 Daily Puzzle with SGT Timezone (12AM reset)"
 echo "  - 🎲 Date-based Seeding for Consistent Daily Puzzles"
 echo "  - 🎯 All 5 Difficulties Available for Daily Puzzles"
+echo "  - 🔐 Puzzle Security - Salt Protection (prevents cheating)"
+echo "  - 🏷️ Seed Display in UI (transparency + debugging)"
 echo "  - ✅ Better Loading States & Feedback"
 echo ""
 
 # Push to repository
 echo "📤 Pushing to repository..."
 git add .
-git commit -m "Add leaderboard, name entry, SGT daily puzzles, and fixes" || echo "Nothing to commit"
+git commit -m "Add leaderboard, name entry, all-difficulty dailies, puzzle security (salt), and seed display" || echo "Nothing to commit"
 git push origin main
 
 echo ""
