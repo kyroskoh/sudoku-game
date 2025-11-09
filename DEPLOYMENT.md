@@ -31,7 +31,7 @@ cd /opt  # or wherever you want to deploy
 Clone or upload the project:
 
 ```bash
-git clone https://github.com/yourusername/sudoku-game.git
+git clone https://github.com/kyroskoh/sudoku-game.git
 cd sudoku-game
 ```
 
@@ -62,7 +62,7 @@ cd ..
 Or initialize it after starting containers:
 
 ```bash
-docker-compose up -d backend
+docker compose up -d backend
 docker exec -it sudoku-backend sh
 npm run prisma:migrate
 exit
@@ -73,20 +73,20 @@ exit
 Build the images:
 
 ```bash
-docker-compose build
+docker compose build
 ```
 
 Start the containers:
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 Check status:
 
 ```bash
-docker-compose ps
-docker-compose logs -f
+docker compose ps
+docker compose logs -f
 ```
 
 Verify containers are healthy:
@@ -174,22 +174,22 @@ Open in browser:
 ```bash
 cd /opt/sudoku-game
 git pull
-docker-compose down
-docker-compose build
-docker-compose up -d
+docker compose down
+docker compose build
+docker compose up -d
 ```
 
 ### View Logs
 
 ```bash
 # All logs
-docker-compose logs -f
+docker compose logs -f
 
 # Backend only
-docker-compose logs -f backend
+docker compose logs -f backend
 
 # Frontend only
-docker-compose logs -f frontend
+docker compose logs -f frontend
 ```
 
 ### Backup Database
@@ -209,7 +209,7 @@ docker cp sudoku-backend:/app/data/backup-$(date +%Y%m%d).sqlite ./backups/
 docker cp ./backups/backup-YYYYMMDD.sqlite sudoku-backend:/app/data/app.sqlite
 
 # Restart backend
-docker-compose restart backend
+docker compose restart backend
 ```
 
 ## 🐛 Troubleshooting
@@ -218,7 +218,7 @@ docker-compose restart backend
 
 ```bash
 # Check logs
-docker-compose logs backend
+docker compose logs backend
 
 # Check if database exists
 docker exec -it sudoku-backend ls -la /app/data
@@ -270,7 +270,7 @@ sudo systemctl stop <service-name>
 ### Check Container Health
 
 ```bash
-docker-compose ps
+docker compose ps
 docker stats
 ```
 
@@ -278,7 +278,7 @@ docker stats
 
 ```bash
 # Tail logs
-docker-compose logs -f --tail=100
+docker compose logs -f --tail=100
 
 # Nginx access logs
 sudo tail -f /var/log/virtualmin/sudoku.kyros.party_access_log
@@ -289,7 +289,7 @@ sudo tail -f /var/log/virtualmin/sudoku.kyros.party_error_log
 
 ### Auto-restart on Crash
 
-Containers are configured with `restart: unless-stopped` in docker-compose.yml, so they'll automatically restart if they crash.
+Containers are configured with `restart: unless-stopped` in docker compose.yml, so they'll automatically restart if they crash.
 
 ## 🔐 Security Checklist
 

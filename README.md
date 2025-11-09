@@ -60,7 +60,7 @@ A modern, feature-rich Sudoku game built with React, TypeScript, Node.js, and SQ
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/yourusername/sudoku-game.git
+git clone https://github.com/kyroskoh/sudoku-game.git
 cd sudoku-game
 ```
 

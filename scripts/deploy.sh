@@ -11,13 +11,13 @@ YELLOW='\033[1;33m'
 RED='\033[0;31m'
 NC='\033[0m' # No Color
 
-# Check if docker and docker-compose are installed
+# Check if docker and docker compose are installed
 if ! command -v docker &> /dev/null; then
     echo -e "${RED}❌ Docker is not installed${NC}"
     exit 1
 fi
 
-if ! command -v docker-compose &> /dev/null; then
+if ! command -v docker compose &> /dev/null; then
     echo -e "${RED}❌ Docker Compose is not installed${NC}"
     exit 1
 fi
@@ -44,15 +44,15 @@ fi
 
 # Stop existing containers
 echo -e "${YELLOW}🛑 Stopping existing containers...${NC}"
-docker-compose down
+docker compose down
 
 # Build images
 echo -e "${YELLOW}🏗️  Building Docker images...${NC}"
-docker-compose build --no-cache
+docker compose build --no-cache
 
 # Start containers
 echo -e "${YELLOW}🚀 Starting containers...${NC}"
-docker-compose up -d
+docker compose up -d
 
 # Wait for backend to be healthy
 echo -e "${YELLOW}⏳ Waiting for backend to be ready...${NC}"
@@ -64,7 +64,7 @@ docker exec sudoku-backend sh -c "npx prisma migrate deploy" || echo "Migration 
 
 # Check container status
 echo -e "${YELLOW}📊 Container status:${NC}"
-docker-compose ps
+docker compose ps
 
 # Test endpoints
 echo -e "${YELLOW}🧪 Testing endpoints...${NC}"
@@ -93,6 +93,6 @@ echo "   Frontend: http://localhost:3010"
 echo "   Backend:  http://localhost:3011"
 echo "   Domain:   https://sudoku.kyros.party (after nginx setup)"
 echo ""
-echo "📝 View logs with: docker-compose logs -f"
-echo "🛑 Stop with: docker-compose down"
+echo "📝 View logs with: docker compose logs -f"
+echo "🛑 Stop with: docker compose down"
 

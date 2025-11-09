@@ -18,7 +18,7 @@ chmod +x scripts/*.sh
 
 - ✅ **Backend Dockerfile** - Node.js API with Prisma
 - ✅ **Frontend Dockerfile** - React SPA with Nginx
-- ✅ **docker-compose.yml** - Orchestration
+- ✅ **docker compose.yml** - Orchestration
 - ✅ **nginx-virtualmin.conf** - Proxy configuration
 - ✅ **deploy.sh** - Automated deployment script
 - ✅ **backup.sh** - Database backup script
@@ -60,11 +60,11 @@ NODE_ENV=production
 EOF
 
 # Build and start
-docker-compose up -d
+docker compose up -d
 
 # Check status
-docker-compose ps
-docker-compose logs -f
+docker compose ps
+docker compose logs -f
 
 # Test locally
 curl http://localhost:3011/api/health  # Should return {"status":"ok"}
@@ -83,7 +83,7 @@ ssh your-server
 cd /opt  # or your preferred location
 
 # Clone repository
-git clone https://github.com/yourusername/sudoku-game.git
+git clone https://github.com/kyroskoh/sudoku-game.git
 cd sudoku-game
 
 # Make scripts executable
@@ -159,28 +159,28 @@ curl https://sudoku.kyros.party/api/health
 
 ```bash
 # View logs
-docker-compose logs -f
-docker-compose logs -f backend
-docker-compose logs -f frontend
+docker compose logs -f
+docker compose logs -f backend
+docker compose logs -f frontend
 
 # Restart services
-docker-compose restart
-docker-compose restart backend
-docker-compose restart frontend
+docker compose restart
+docker compose restart backend
+docker compose restart frontend
 
 # Stop all
-docker-compose down
+docker compose down
 
 # Start all
-docker-compose up -d
+docker compose up -d
 
 # Rebuild after code changes
-docker-compose down
-docker-compose build --no-cache
-docker-compose up -d
+docker compose down
+docker compose build --no-cache
+docker compose up -d
 
 # Check container status
-docker-compose ps
+docker compose ps
 docker stats
 
 # Access container shell
@@ -208,13 +208,13 @@ docker logs sudoku-frontend
 
 ```bash
 # Stop backend
-docker-compose stop backend
+docker compose stop backend
 
 # Copy backup to container
 docker cp ./backups/sudoku_backup_20251109_120000.sqlite sudoku-backend:/app/data/app.sqlite
 
 # Start backend
-docker-compose start backend
+docker compose start backend
 ```
 
 ## 🔄 Update Application
@@ -227,9 +227,9 @@ git pull
 ./scripts/deploy.sh
 
 # Or manually:
-docker-compose down
-docker-compose build --no-cache
-docker-compose up -d
+docker compose down
+docker compose build --no-cache
+docker compose up -d
 ```
 
 ## 🐛 Troubleshooting
@@ -238,17 +238,17 @@ docker-compose up -d
 
 ```bash
 # Check logs
-docker-compose logs backend
-docker-compose logs frontend
+docker compose logs backend
+docker compose logs frontend
 
 # Check if ports are in use
 sudo lsof -i :3010
 sudo lsof -i :3011
 
 # Remove and rebuild
-docker-compose down -v
-docker-compose build --no-cache
-docker-compose up -d
+docker compose down -v
+docker compose build --no-cache
+docker compose up -d
 ```
 
 ### Database issues
@@ -261,7 +261,7 @@ exit
 
 # Or reset database (WARNING: deletes all data)
 rm -rf backend/data/app.sqlite
-docker-compose restart backend
+docker compose restart backend
 docker exec -it sudoku-backend npx prisma migrate deploy
 ```
 
@@ -272,7 +272,7 @@ docker exec -it sudoku-backend npx prisma migrate deploy
 sudo nginx -t
 
 # Check if containers are running
-docker-compose ps
+docker compose ps
 
 # Check if ports are accessible from host
 curl http://localhost:3011/api/health
@@ -307,17 +307,17 @@ curl https://sudoku.kyros.party/api/health
 curl https://sudoku.kyros.party/health
 
 # Check Docker health status
-docker-compose ps
+docker compose ps
 ```
 
 ### View Logs
 
 ```bash
 # Real-time logs
-docker-compose logs -f
+docker compose logs -f
 
 # Last 100 lines
-docker-compose logs --tail=100
+docker compose logs --tail=100
 
 # Nginx access logs (via Virtualmin)
 sudo tail -f /var/log/virtualmin/sudoku.kyros.party_access_log
@@ -332,7 +332,7 @@ Before going live:
 
 - [ ] Backend .env file created with production values
 - [ ] Database initialized with `prisma migrate deploy`
-- [ ] Docker containers running (`docker-compose ps`)
+- [ ] Docker containers running (`docker compose ps`)
 - [ ] Health endpoints responding (backend & frontend)
 - [ ] Nginx configuration added to Virtualmin
 - [ ] SSL certificate installed and working

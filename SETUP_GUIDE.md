@@ -15,7 +15,7 @@ Before you begin, make sure you have:
 ### 1️⃣ Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/sudoku-game.git
+git clone https://github.com/kyroskoh/sudoku-game.git
 cd sudoku-game
 ```
 
