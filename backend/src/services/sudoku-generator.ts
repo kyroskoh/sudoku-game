@@ -16,6 +16,7 @@ interface PuzzleResult {
 export class SudokuGenerator {
   private readonly SIZE = 9;
   private readonly BOX_SIZE = 3;
+  private rng: () => number;
 
   /**
    * Generate a complete valid Sudoku solution
@@ -83,12 +84,12 @@ export class SudokuGenerator {
   }
 
   /**
-   * Shuffle array in place
+   * Shuffle array in place using the current RNG
    */
   private shuffle<T>(array: T[]): T[] {
     const shuffled = [...array];
     for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
+      const j = Math.floor(this.rng() * (i + 1));
       [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
     }
     return shuffled;
@@ -225,13 +226,18 @@ export class SudokuGenerator {
   public generatePuzzle(difficulty: Difficulty, seed?: string): PuzzleResult {
     const actualSeed = seed || this.generateSeed();
     
-    // Use seed for reproducibility (simple implementation)
+    // Set up RNG (seeded or default)
     if (seed) {
-      Math.random = this.seededRandom(seed);
+      this.rng = this.seededRandom(seed);
+    } else {
+      this.rng = Math.random;
     }
 
     const solution = this.generateCompleteSolution();
     const givens = this.createPuzzle(solution, difficulty);
+
+    // Restore default RNG
+    this.rng = Math.random;
 
     return {
       givens,
