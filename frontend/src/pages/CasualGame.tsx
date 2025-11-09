@@ -2,7 +2,7 @@
  * Casual Game Page
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGameStore } from '../store/gameStore';
 import { Grid } from '../components/Grid';
@@ -16,7 +16,14 @@ export const CasualGame: React.FC = () => {
   const navigate = useNavigate();
   const [selectedDifficulty, setSelectedDifficulty] = useState<Difficulty>('easy');
   const [loading, setLoading] = useState(false);
+  const [showSelector, setShowSelector] = useState(true);
   const { puzzle, loadPuzzle, startGame, isComplete, resetGame } = useGameStore();
+
+  // Clear puzzle when entering casual mode to show difficulty selection
+  useEffect(() => {
+    resetGame();
+    setShowSelector(true);
+  }, []);
 
   const difficulties: Difficulty[] = ['easy', 'medium', 'hard', 'expert', 'extreme'];
 
@@ -26,6 +33,7 @@ export const CasualGame: React.FC = () => {
       const newPuzzle = await api.getPuzzle('casual', selectedDifficulty);
       loadPuzzle(newPuzzle);
       startGame();
+      setShowSelector(false);
     } catch (error) {
       console.error('Error loading puzzle:', error);
       alert('Failed to load puzzle. Please try again.');
@@ -36,7 +44,12 @@ export const CasualGame: React.FC = () => {
 
   const handleNewGame = () => {
     resetGame();
-    handleStartGame();
+    setShowSelector(true);
+  };
+
+  const handleChangeDifficulty = () => {
+    resetGame();
+    setShowSelector(true);
   };
 
   if (loading) {
@@ -47,16 +60,16 @@ export const CasualGame: React.FC = () => {
     );
   }
 
-  if (!puzzle) {
+  if (!puzzle || showSelector) {
     return (
       <div className={styles.gamePage}>
         <div className={styles.header}>
-          <h1 className={styles.title}>Casual Mode</h1>
+          <h1 className={styles.title}>🎮 Casual Mode</h1>
           <p className={styles.subtitle}>Practice and improve your Sudoku skills</p>
         </div>
 
         <div className={styles.difficultySelector}>
-          <label className={styles.difficultyLabel}>Select Difficulty:</label>
+          <label className={styles.difficultyLabel}>Select Your Difficulty:</label>
           <div className={styles.difficultyButtons}>
             {difficulties.map((diff) => (
               <button
@@ -65,13 +78,18 @@ export const CasualGame: React.FC = () => {
                   selectedDifficulty === diff ? styles.selected : ''
                 }`}
                 onClick={() => setSelectedDifficulty(diff)}
+                aria-label={`Select ${diff} difficulty`}
               >
                 {diff.charAt(0).toUpperCase() + diff.slice(1)}
               </button>
             ))}
           </div>
-          <button className={styles.startButton} onClick={handleStartGame}>
-            Start Game
+          <button 
+            className={styles.startButton} 
+            onClick={handleStartGame}
+            disabled={loading}
+          >
+            {loading ? 'Loading...' : `Start ${selectedDifficulty.charAt(0).toUpperCase() + selectedDifficulty.slice(1)} Game`}
           </button>
         </div>
       </div>
@@ -82,6 +100,13 @@ export const CasualGame: React.FC = () => {
     <div className={styles.gamePage}>
       <div className={styles.header}>
         <h1 className={styles.title}>Casual - {puzzle.difficulty}</h1>
+        <button 
+          className={styles.secondaryButton}
+          onClick={handleChangeDifficulty}
+          style={{ marginTop: '1rem' }}
+        >
+          ← Change Difficulty
+        </button>
       </div>
 
       <div className={styles.gameArea}>

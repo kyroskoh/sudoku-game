@@ -2,7 +2,7 @@
  * Challenge Game Page
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGameStore } from '../store/gameStore';
 import { Grid } from '../components/Grid';
@@ -16,7 +16,14 @@ export const ChallengeGame: React.FC = () => {
   const navigate = useNavigate();
   const [selectedDifficulty, setSelectedDifficulty] = useState<Difficulty>('medium');
   const [loading, setLoading] = useState(false);
+  const [showSelector, setShowSelector] = useState(true);
   const { puzzle, loadPuzzle, startGame, isComplete, resetGame } = useGameStore();
+
+  // Clear puzzle when entering challenge mode to show difficulty selection
+  useEffect(() => {
+    resetGame();
+    setShowSelector(true);
+  }, []);
 
   const difficulties: Difficulty[] = ['easy', 'medium', 'hard', 'expert', 'extreme'];
 
@@ -26,6 +33,7 @@ export const ChallengeGame: React.FC = () => {
       const newPuzzle = await api.getPuzzle('challenge', selectedDifficulty);
       loadPuzzle(newPuzzle);
       startGame();
+      setShowSelector(false);
     } catch (error) {
       console.error('Error loading challenge:', error);
       alert('Failed to load challenge. Please try again.');
@@ -36,7 +44,12 @@ export const ChallengeGame: React.FC = () => {
 
   const handleNewChallenge = () => {
     resetGame();
-    handleStartChallenge();
+    setShowSelector(true);
+  };
+
+  const handleChangeDifficulty = () => {
+    resetGame();
+    setShowSelector(true);
   };
 
   if (loading) {
@@ -47,7 +60,7 @@ export const ChallengeGame: React.FC = () => {
     );
   }
 
-  if (!puzzle) {
+  if (!puzzle || showSelector) {
     return (
       <div className={styles.gamePage}>
         <div className={styles.header}>
@@ -65,13 +78,18 @@ export const ChallengeGame: React.FC = () => {
                   selectedDifficulty === diff ? styles.selected : ''
                 }`}
                 onClick={() => setSelectedDifficulty(diff)}
+                aria-label={`Select ${diff} difficulty`}
               >
                 {diff.charAt(0).toUpperCase() + diff.slice(1)}
               </button>
             ))}
           </div>
-          <button className={styles.startButton} onClick={handleStartChallenge}>
-            Start Challenge
+          <button 
+            className={styles.startButton} 
+            onClick={handleStartChallenge}
+            disabled={loading}
+          >
+            {loading ? 'Loading...' : `Start ${selectedDifficulty.charAt(0).toUpperCase() + selectedDifficulty.slice(1)} Challenge`}
           </button>
         </div>
       </div>
@@ -82,6 +100,13 @@ export const ChallengeGame: React.FC = () => {
     <div className={styles.gamePage}>
       <div className={styles.header}>
         <h1 className={styles.title}>🏆 Challenge - {puzzle.difficulty}</h1>
+        <button 
+          className={styles.secondaryButton}
+          onClick={handleChangeDifficulty}
+          style={{ marginTop: '1rem' }}
+        >
+          ← Change Difficulty
+        </button>
       </div>
 
       <div className={styles.gameArea}>
