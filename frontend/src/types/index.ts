@@ -1,0 +1,85 @@
+/**
+ * Type definitions for Sudoku Mastery
+ */
+
+export type Difficulty = 'easy' | 'medium' | 'hard' | 'expert' | 'extreme';
+export type GameMode = 'casual' | 'daily' | 'challenge';
+export type InputMode = 'pen' | 'pencil';
+export type Theme = 'classic' | 'dark' | 'ocean' | 'forest';
+
+export type SudokuBoard = number[][];
+export type NotesBoard = Set<number>[][];
+
+export interface Puzzle {
+  id: string;
+  mode: GameMode;
+  difficulty: Difficulty;
+  givens: SudokuBoard;
+  seed: string;
+  date?: Date;
+}
+
+export interface GameState {
+  puzzle: Puzzle | null;
+  board: SudokuBoard;
+  notes: NotesBoard;
+  selectedCell: { row: number; col: number } | null;
+  inputMode: InputMode;
+  mistakes: number;
+  hintsUsed: number;
+  startTime: number | null;
+  isPaused: boolean;
+  isComplete: boolean;
+  history: HistoryState[];
+  historyIndex: number;
+}
+
+export interface HistoryState {
+  board: SudokuBoard;
+  notes: NotesBoard;
+}
+
+export interface Attempt {
+  id: string;
+  puzzleId: string;
+  mode: GameMode;
+  difficulty: Difficulty;
+  startedAt: Date;
+  finishedAt?: Date;
+  timeMs?: number;
+  mistakes: number;
+  hintsUsed: number;
+  result: 'in_progress' | 'completed' | 'failed';
+  updatedAt: Date;
+}
+
+export interface Settings {
+  theme: Theme;
+  showMistakes: boolean;
+  autoNoteClear: boolean;
+  highlightDuplicates: boolean;
+  highlightRowCol: boolean;
+  soundEnabled: boolean;
+}
+
+export interface Stats {
+  totalCompleted: number;
+  byMode: Record<string, { count: number; totalTime: number }>;
+  byDifficulty: Record<string, { count: number; totalTime: number }>;
+  bestTimes: Record<string, number>;
+}
+
+export interface StreakInfo {
+  currentStreak: number;
+  lastPlayedDate: Date | null;
+}
+
+export interface LeaderboardEntry {
+  id: string;
+  puzzleId: string;
+  userId?: string;
+  deviceId?: string;
+  timeMs: number;
+  createdAt: Date;
+}
+

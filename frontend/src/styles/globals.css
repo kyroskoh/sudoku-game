@@ -1,0 +1,176 @@
+/**
+ * Global Styles
+ */
+
+:root {
+  /* Classic Theme */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f5f5f5;
+  --bg-tertiary: #e0e0e0;
+  --text-primary: #333333;
+  --text-secondary: #666666;
+  --border-color: #cccccc;
+  --highlight-color: #e3f2fd;
+  --selected-color: #bbdefb;
+  --given-color: #1976d2;
+  --user-color: #333333;
+  --error-color: #f44336;
+  --success-color: #4caf50;
+  --button-primary: #2196f3;
+  --button-hover: #1976d2;
+  --note-color: #999999;
+}
+
+[data-theme="dark"] {
+  --bg-primary: #1a1a1a;
+  --bg-secondary: #2d2d2d;
+  --bg-tertiary: #404040;
+  --text-primary: #e0e0e0;
+  --text-secondary: #b0b0b0;
+  --border-color: #555555;
+  --highlight-color: #263238;
+  --selected-color: #37474f;
+  --given-color: #64b5f6;
+  --user-color: #e0e0e0;
+  --error-color: #ef5350;
+  --success-color: #66bb6a;
+  --button-primary: #42a5f5;
+  --button-hover: #1e88e5;
+  --note-color: #808080;
+}
+
+[data-theme="ocean"] {
+  --bg-primary: #e0f2f1;
+  --bg-secondary: #b2dfdb;
+  --bg-tertiary: #80cbc4;
+  --text-primary: #004d40;
+  --text-secondary: #00695c;
+  --border-color: #4db6ac;
+  --highlight-color: #b2ebf2;
+  --selected-color: #80deea;
+  --given-color: #00796b;
+  --user-color: #004d40;
+  --error-color: #d32f2f;
+  --success-color: #388e3c;
+  --button-primary: #00acc1;
+  --button-hover: #0097a7;
+  --note-color: #4db6ac;
+}
+
+[data-theme="forest"] {
+  --bg-primary: #f1f8e9;
+  --bg-secondary: #dcedc8;
+  --bg-tertiary: #c5e1a5;
+  --text-primary: #33691e;
+  --text-secondary: #558b2f;
+  --border-color: #9ccc65;
+  --highlight-color: #e8f5e9;
+  --selected-color: #c8e6c9;
+  --given-color: #558b2f;
+  --user-color: #33691e;
+  --error-color: #d32f2f;
+  --success-color: #388e3c;
+  --button-primary: #7cb342;
+  --button-hover: #689f38;
+  --note-color: #9ccc65;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  transition: all 0.2s;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+input {
+  font-family: inherit;
+}
+
+a {
+  color: var(--button-primary);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Utility classes */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.gap-1 {
+  gap: 0.5rem;
+}
+
+.gap-2 {
+  gap: 1rem;
+}
+
+.gap-3 {
+  gap: 1.5rem;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+

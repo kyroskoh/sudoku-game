@@ -1,0 +1,104 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 0;
+  border: 3px solid var(--text-primary);
+  background-color: var(--bg-primary);
+  width: min(90vw, 500px);
+  height: min(90vw, 500px);
+  margin: 0 auto;
+  user-select: none;
+  touch-action: none;
+}
+
+.cell {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-primary);
+  cursor: pointer;
+  position: relative;
+  transition: background-color 0.1s;
+  font-size: clamp(1rem, 4vw, 2rem);
+  font-weight: 500;
+}
+
+.cell:nth-child(3n):not(:nth-child(9n)) {
+  border-right: 2px solid var(--text-primary);
+}
+
+.cell:nth-child(n + 19):nth-child(-n + 27),
+.cell:nth-child(n + 46):nth-child(-n + 54) {
+  border-bottom: 2px solid var(--text-primary);
+}
+
+.cell.given {
+  color: var(--given-color);
+  font-weight: 700;
+  background-color: var(--bg-secondary);
+}
+
+.cell.user {
+  color: var(--user-color);
+}
+
+.cell.selected {
+  background-color: var(--selected-color) !important;
+  outline: 3px solid var(--button-primary);
+  outline-offset: -3px;
+  z-index: 1;
+}
+
+.cell.highlighted {
+  background-color: var(--highlight-color);
+}
+
+.cell.error {
+  background-color: rgba(244, 67, 54, 0.2);
+  color: var(--error-color);
+}
+
+.cell.duplicate {
+  background-color: rgba(244, 67, 54, 0.1);
+}
+
+.cell:hover:not(.given) {
+  background-color: var(--bg-tertiary);
+}
+
+.notes {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  width: 100%;
+  height: 100%;
+  padding: 2px;
+  gap: 1px;
+}
+
+.note {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(0.4rem, 1.2vw, 0.7rem);
+  color: var(--note-color);
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .grid {
+    width: min(95vw, 400px);
+    height: min(95vw, 400px);
+  }
+
+  .cell {
+    font-size: clamp(0.8rem, 3.5vw, 1.5rem);
+  }
+
+  .note {
+    font-size: clamp(0.3rem, 1vw, 0.6rem);
+  }
+}
+

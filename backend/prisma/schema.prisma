@@ -1,0 +1,95 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String    @id @default(uuid())
+  email       String?   @unique
+  displayName String?
+  createdAt   DateTime  @default(now())
+  attempts    Attempt[]
+  badges      Badge[]
+  devices     Device[]
+}
+
+model Device {
+  id        String    @id @default(uuid())
+  userId    String?
+  user      User?     @relation(fields: [userId], references: [id])
+  createdAt DateTime  @default(now())
+  attempts  Attempt[]
+
+  @@index([userId])
+}
+
+model Puzzle {
+  id              String    @id @default(uuid())
+  mode            String    // 'casual' | 'daily' | 'challenge'
+  difficulty      String    // 'easy' | 'medium' | 'hard' | 'expert' | 'extreme'
+  date            DateTime?
+  seed            String
+  givens          String    // JSON text
+  solution        String    // JSON text (server-only)
+  createdAt       DateTime  @default(now())
+  attempts        Attempt[]
+  leaderboards    Leaderboard[]
+
+  @@index([mode, difficulty])
+  @@index([date])
+  @@index([seed])
+}
+
+model Attempt {
+  id         String    @id @default(uuid())
+  puzzleId   String
+  userId     String?
+  deviceId   String?
+  mode       String
+  difficulty String
+  startedAt  DateTime
+  finishedAt DateTime?
+  timeMs     Int?
+  mistakes   Int       @default(0)
+  hintsUsed  Int       @default(0)
+  result     String    @default("in_progress") // 'in_progress' | 'completed' | 'failed'
+  updatedAt  DateTime  @updatedAt
+  puzzle     Puzzle    @relation(fields: [puzzleId], references: [id])
+  user       User?     @relation(fields: [userId], references: [id])
+  device     Device?   @relation(fields: [deviceId], references: [id])
+
+  @@index([puzzleId])
+  @@index([userId])
+  @@index([deviceId])
+  @@index([updatedAt])
+}
+
+model Leaderboard {
+  id        String   @id @default(uuid())
+  puzzleId  String
+  userId    String?
+  deviceId  String?
+  timeMs    Int
+  createdAt DateTime @default(now())
+  puzzle    Puzzle   @relation(fields: [puzzleId], references: [id])
+
+  @@index([puzzleId, timeMs])
+}
+
+model Badge {
+  id       String   @id @default(uuid())
+  userId   String
+  code     String
+  earnedAt DateTime @default(now())
+  user     User     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+}
+
