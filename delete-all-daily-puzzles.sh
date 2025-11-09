@@ -50,7 +50,7 @@ deleteAll();
 
 echo ""
 echo "🔄 Restarting backend to clear memory cache..."
-docker compose restart sudoku-backend
+docker restart sudoku-backend
 
 echo ""
 echo "⏳ Waiting for backend to restart..."

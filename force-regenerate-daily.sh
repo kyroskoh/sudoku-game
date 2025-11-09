@@ -24,7 +24,7 @@ echo ""
 
 # Restart backend to ensure clean state
 echo "🔄 Restarting backend..."
-docker compose restart sudoku-backend
+docker restart sudoku-backend
 echo ""
 
 # Wait for restart
