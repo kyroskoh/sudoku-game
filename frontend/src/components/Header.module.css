@@ -15,10 +15,53 @@
   gap: 1rem;
 }
 
+.titleContainer {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
 .title {
   font-size: 1.8rem;
   font-weight: 700;
   margin: 0;
+}
+
+/* Debug mode: Show device ID */
+.debugInfo {
+  background-color: rgba(255, 255, 255, 0.15);
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.debugLabel {
+  font-weight: 700;
+  opacity: 0.9;
+}
+
+.debugItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.debugItem strong {
+  opacity: 0.8;
+}
+
+.debugItem code {
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.8rem;
+  letter-spacing: 0.5px;
 }
 
 .nav {
@@ -66,8 +109,33 @@
     padding: 0.75rem 1rem;
   }
 
+  .titleContainer {
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+  }
+
   .title {
     font-size: 1.4rem;
+  }
+
+  .debugInfo {
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+  }
+
+  .debugItem {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+
+  .debugItem code {
+    font-size: 0.7rem;
+    word-break: break-all;
   }
 
   .nav {
