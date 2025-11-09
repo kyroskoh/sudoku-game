@@ -35,7 +35,7 @@ export const NumberPad: React.FC = () => {
   };
 
   const isDisabled = !selectedCell || 
-    (puzzle && selectedCell && puzzle.givens[selectedCell.row][selectedCell.col] !== 0);
+    (!!puzzle && !!selectedCell && puzzle.givens[selectedCell.row][selectedCell.col] !== 0);
 
   return (
     <div className={styles.numberPad} role="group" aria-label="Number pad">

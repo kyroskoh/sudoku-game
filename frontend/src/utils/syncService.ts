@@ -4,7 +4,7 @@
  */
 
 import { api } from './api';
-import { getSyncQueue, clearSyncQueue, queueAttempt, getDeviceId } from './localStorage';
+import { getSyncQueue, clearSyncQueue, getDeviceId } from './localStorage';
 
 class SyncService {
   private syncInterval: number | null = null;

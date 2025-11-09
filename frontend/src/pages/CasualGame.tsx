@@ -2,7 +2,7 @@
  * Casual Game Page
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGameStore } from '../store/gameStore';
 import { Grid } from '../components/Grid';

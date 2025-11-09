@@ -16,7 +16,7 @@ export const DailyGame: React.FC = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [streak, setStreak] = useState({ currentStreak: 0, lastPlayedDate: null });
-  const { puzzle, loadPuzzle, startGame, isComplete } = useGameStore();
+  const { loadPuzzle, startGame, isComplete } = useGameStore();
 
   useEffect(() => {
     loadDailyPuzzle();
