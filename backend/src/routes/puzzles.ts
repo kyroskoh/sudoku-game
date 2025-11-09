@@ -42,12 +42,22 @@ router.get('/', async (req: Request, res: Response) => {
 
 /**
  * GET /api/puzzles/:id
+ * Query param: ?showsolution=true to include solution (dev mode)
  */
 router.get('/:id', async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
+    const { showsolution } = req.query;
+    
     const puzzle = await puzzleService.getPuzzleById(id);
-    res.json(puzzle);
+    
+    // Include solution if showsolution=true (for dev/debug mode)
+    if (showsolution === 'true') {
+      const solution = await puzzleService.getPuzzleSolution(id);
+      res.json({ ...puzzle, solution });
+    } else {
+      res.json(puzzle);
+    }
   } catch (error) {
     console.error('Error getting puzzle:', error);
     res.status(404).json({ error: 'Puzzle not found' });

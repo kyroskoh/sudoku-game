@@ -2,7 +2,7 @@
  * Sudoku Grid Component
  */
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useGameStore } from '../store/gameStore';
 import styles from './Grid.module.css';
 
@@ -20,6 +20,36 @@ export const Grid: React.FC = () => {
     inputMode,
     completeGame
   } = useGameStore();
+
+  const [showAnswers, setShowAnswers] = useState(false);
+  const [solution, setSolution] = useState<number[][] | null>(null);
+
+  // Check for ?showans=true in URL
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const showAns = params.get('showans') === 'true';
+    setShowAnswers(showAns);
+
+    // Fetch solution if showans is enabled and we have a puzzle
+    if (showAns && puzzle && puzzle.id) {
+      fetchSolution(puzzle.id);
+    }
+  }, [puzzle]);
+
+  const fetchSolution = async (puzzleId: string) => {
+    try {
+      const response = await fetch(`/api/puzzles/${puzzleId}?showsolution=true`);
+      if (response.ok) {
+        const data = await response.json();
+        if (data.solution) {
+          setSolution(data.solution);
+          console.log('🔓 Debug mode activated: Showing answers');
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching solution:', error);
+    }
+  };
 
   if (!puzzle) return null;
 
@@ -150,6 +180,7 @@ export const Grid: React.FC = () => {
   const renderCell = (row: number, col: number, index: number) => {
     const value = board[row][col];
     const cellNotes = notes[row][col];
+    const isEmpty = value === 0;
 
     return (
       <div
@@ -159,6 +190,9 @@ export const Grid: React.FC = () => {
         role="gridcell"
         aria-label={`Cell ${row + 1}, ${col + 1}`}
         tabIndex={0}
+        style={{
+          position: 'relative'
+        }}
       >
         {value !== 0 ? (
           value
@@ -171,6 +205,13 @@ export const Grid: React.FC = () => {
             ))}
           </div>
         ) : null}
+        
+        {/* Debug mode: Show solution in corner */}
+        {showAnswers && isEmpty && solution && solution[row] && solution[row][col] && (
+          <div className={styles.debugAnswer}>
+            {solution[row][col]}
+          </div>
+        )}
       </div>
     );
   };

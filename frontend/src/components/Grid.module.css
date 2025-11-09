@@ -87,6 +87,22 @@
   font-weight: 500;
 }
 
+/* Debug mode: Show answer in top-right corner */
+.debugAnswer {
+  position: absolute;
+  top: 2px;
+  right: 4px;
+  font-size: clamp(0.5rem, 1.5vw, 0.8rem);
+  color: #ff6b6b;
+  font-weight: 700;
+  background-color: rgba(255, 107, 107, 0.1);
+  padding: 1px 4px;
+  border-radius: 3px;
+  pointer-events: none;
+  z-index: 10;
+  opacity: 0.8;
+}
+
 @media (max-width: 768px) {
   .grid {
     width: min(95vw, 400px);
@@ -99,6 +115,13 @@
 
   .note {
     font-size: clamp(0.3rem, 1vw, 0.6rem);
+  }
+
+  .debugAnswer {
+    font-size: clamp(0.45rem, 1.2vw, 0.7rem);
+    top: 1px;
+    right: 2px;
+    padding: 1px 3px;
   }
 }
 
