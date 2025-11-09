@@ -42,12 +42,22 @@ export const Grid: React.FC = () => {
       if (response.ok) {
         const data = await response.json();
         if (data.solution) {
-          setSolution(data.solution);
+          // Parse solution if it's a string, otherwise use as-is
+          const solutionData = typeof data.solution === 'string' 
+            ? JSON.parse(data.solution) 
+            : data.solution;
+          
+          setSolution(solutionData);
           console.log('🔓 Debug mode activated: Showing answers');
+          console.log('Solution data:', solutionData);
+        } else {
+          console.error('❌ No solution in response:', data);
         }
+      } else {
+        console.error('❌ Failed to fetch solution:', response.status);
       }
     } catch (error) {
-      console.error('Error fetching solution:', error);
+      console.error('❌ Error fetching solution:', error);
     }
   };
 
@@ -181,6 +191,7 @@ export const Grid: React.FC = () => {
     const value = board[row][col];
     const cellNotes = notes[row][col];
     const isEmpty = value === 0;
+    const answerValue = solution?.[row]?.[col];
 
     return (
       <div
@@ -207,9 +218,9 @@ export const Grid: React.FC = () => {
         ) : null}
         
         {/* Debug mode: Show solution in corner */}
-        {showAnswers && isEmpty && solution && solution[row] && solution[row][col] && (
+        {showAnswers && isEmpty && answerValue && (
           <div className={styles.debugAnswer}>
-            {solution[row][col]}
+            {answerValue}
           </div>
         )}
       </div>
