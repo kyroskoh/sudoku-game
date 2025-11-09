@@ -4,8 +4,9 @@
  */
 
 import { create } from 'zustand';
-import type { GameState, Puzzle, SudokuBoard, NotesBoard, InputMode, Settings } from '../types';
-import { getSettings, saveSettings } from '../utils/localStorage';
+import type { GameState, Puzzle, SudokuBoard, NotesBoard, InputMode, Settings, Attempt } from '../types';
+import { getSettings, saveSettings, queueAttempt } from '../utils/localStorage';
+import { v4 as uuidv4 } from 'uuid';
 
 interface GameStore extends GameState {
   settings: Settings;
@@ -250,6 +251,32 @@ export const useGameStore = create<GameStore>((set, get) => ({
   },
 
   completeGame: () => {
+    const state = get();
+    
+    // Calculate time
+    const timeMs = state.startTime ? Date.now() - state.startTime : 0;
+    
+    // Create attempt
+    if (state.puzzle && state.startTime) {
+      const attempt: Attempt = {
+        id: uuidv4(),
+        puzzleId: state.puzzle.id,
+        mode: state.puzzle.mode,
+        difficulty: state.puzzle.difficulty,
+        startedAt: new Date(state.startTime),
+        finishedAt: new Date(),
+        timeMs,
+        mistakes: state.mistakes,
+        hintsUsed: state.hintsUsed,
+        result: 'completed',
+        updatedAt: new Date()
+      };
+      
+      // Queue attempt for syncing
+      queueAttempt(attempt);
+      console.log('✅ Puzzle completed! Attempt queued for sync:', attempt);
+    }
+    
     set({ isComplete: true, isPaused: true });
   },
 
