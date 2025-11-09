@@ -52,6 +52,12 @@ export const Header: React.FC = () => {
           >
             Challenge
           </Link>
+          <Link
+            to="/leaderboard"
+            className={`${styles.navLink} ${isActive('/leaderboard') ? styles.active : ''}`}
+          >
+            🏆 Leaderboard
+          </Link>
           <button
             className={styles.themeButton}
             onClick={cycleTheme}

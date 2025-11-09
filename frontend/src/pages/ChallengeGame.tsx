@@ -94,10 +94,15 @@ export const ChallengeGame: React.FC = () => {
         <div className={styles.completionModal}>
           <div className={styles.modalContent}>
             <h2 className={styles.modalTitle}>🏆 Challenge Complete!</h2>
-            <p className={styles.modalStats}>Outstanding performance!</p>
+            <p className={styles.modalStats}>
+              Outstanding performance on {puzzle.difficulty}!
+            </p>
             <div className={styles.modalButtons}>
               <button className={styles.modalButton} onClick={handleNewChallenge}>
                 New Challenge
+              </button>
+              <button className={styles.modalButton} onClick={() => navigate('/leaderboard')}>
+                🏆 View Leaderboard
               </button>
               <button className={styles.modalButton} onClick={() => navigate('/')}>
                 Home

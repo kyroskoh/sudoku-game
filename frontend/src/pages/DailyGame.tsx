@@ -82,6 +82,9 @@ export const DailyGame: React.FC = () => {
               🔥 Streak: {streak.currentStreak + 1} days
             </p>
             <div className={styles.modalButtons}>
+              <button className={styles.modalButton} onClick={() => navigate('/leaderboard')}>
+                🏆 View Leaderboard
+              </button>
               <button className={styles.modalButton} onClick={() => navigate('/')}>
                 Home
               </button>

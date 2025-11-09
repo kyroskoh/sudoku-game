@@ -94,10 +94,15 @@ export const CasualGame: React.FC = () => {
         <div className={styles.completionModal}>
           <div className={styles.modalContent}>
             <h2 className={styles.modalTitle}>🎉 Congratulations!</h2>
-            <p className={styles.modalStats}>You completed the puzzle!</p>
+            <p className={styles.modalStats}>
+              You completed the {puzzle.difficulty} puzzle!
+            </p>
             <div className={styles.modalButtons}>
               <button className={styles.modalButton} onClick={handleNewGame}>
                 New Game
+              </button>
+              <button className={styles.modalButton} onClick={() => navigate('/leaderboard')}>
+                🏆 View Leaderboard
               </button>
               <button className={styles.modalButton} onClick={() => navigate('/')}>
                 Home
