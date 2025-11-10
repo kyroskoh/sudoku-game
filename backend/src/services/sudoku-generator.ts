@@ -23,7 +23,21 @@ export class SudokuGenerator {
    */
   private generateCompleteSolution(): SudokuBoard {
     const board: SudokuBoard = Array(this.SIZE).fill(0).map(() => Array(this.SIZE).fill(0));
-    this.fillBoard(board);
+    const success = this.fillBoard(board);
+    
+    if (!success) {
+      throw new Error('Failed to generate complete Sudoku solution - backtracking failed');
+    }
+    
+    // Verify board is completely filled (no zeros)
+    for (let row = 0; row < this.SIZE; row++) {
+      for (let col = 0; col < this.SIZE; col++) {
+        if (board[row][col] === 0) {
+          throw new Error(`Generated solution has empty cell at [${row}][${col}]`);
+        }
+      }
+    }
+    
     return board;
   }
 
@@ -239,16 +253,25 @@ export class SudokuGenerator {
     // Restore default RNG
     this.rng = Math.random;
 
-    // Validate: Replace any null/undefined with 0
+    // Validate: Replace any null/undefined with 0 for givens (empty cells)
     const cleanGivens = givens.map(row => 
       row.map(cell => (cell === null || cell === undefined) ? 0 : cell)
     );
-    const cleanSolution = solution.map(row => 
-      row.map(cell => (cell === null || cell === undefined || cell === 0) ? 
-        // If solution has 0/null/undefined, something is very wrong
-        (cell || 1) : cell
-      )
-    );
+    
+    // CRITICAL: Solution should NEVER have null/undefined/0 - if it does, generation failed
+    const cleanSolution: SudokuBoard = [];
+    for (let row = 0; row < this.SIZE; row++) {
+      cleanSolution[row] = [];
+      for (let col = 0; col < this.SIZE; col++) {
+        const cell = solution[row][col];
+        if (cell === null || cell === undefined || cell === 0 || cell < 1 || cell > 9) {
+          console.error(`[Puzzle Generation] CRITICAL: Invalid solution value at [${row}][${col}]: ${cell}`);
+          // Don't try to "fix" it - regenerate instead
+          throw new Error(`Solution generation failed: invalid value ${cell} at [${row}][${col}]. This indicates a bug in puzzle generation.`);
+        }
+        cleanSolution[row][col] = cell;
+      }
+    }
 
     // CRITICAL VALIDATION: Ensure givens match solution where givens are non-zero
     for (let row = 0; row < this.SIZE; row++) {
@@ -289,9 +312,19 @@ export class SudokuGenerator {
           const cleanRetryGivens = retryGivens.map(row => 
             row.map(cell => (cell === null || cell === undefined) ? 0 : cell)
           );
-          const cleanRetrySolution = retrySolution.map(row => 
-            row.map(cell => (cell === null || cell === undefined || cell === 0) ? (cell || 1) : cell)
-          );
+          
+          // Validate retry solution - should never have invalid values
+          const cleanRetrySolution: SudokuBoard = [];
+          for (let r = 0; r < this.SIZE; r++) {
+            cleanRetrySolution[r] = [];
+            for (let c = 0; c < this.SIZE; c++) {
+              const cell = retrySolution[r][c];
+              if (cell === null || cell === undefined || cell === 0 || cell < 1 || cell > 9) {
+                throw new Error(`Retry solution invalid at [${r}][${c}]: ${cell}`);
+              }
+              cleanRetrySolution[r][c] = cell;
+            }
+          }
           
           // Ensure givens match solution
           for (let row = 0; row < this.SIZE; row++) {
@@ -336,9 +369,19 @@ export class SudokuGenerator {
           const cleanRetryGivens = retryGivens.map(row => 
             row.map(cell => (cell === null || cell === undefined) ? 0 : cell)
           );
-          const cleanRetrySolution = retrySolution.map(row => 
-            row.map(cell => (cell === null || cell === undefined || cell === 0) ? (cell || 1) : cell)
-          );
+          
+          // Validate retry solution - should never have invalid values
+          const cleanRetrySolution: SudokuBoard = [];
+          for (let r = 0; r < this.SIZE; r++) {
+            cleanRetrySolution[r] = [];
+            for (let c = 0; c < this.SIZE; c++) {
+              const cell = retrySolution[r][c];
+              if (cell === null || cell === undefined || cell === 0 || cell < 1 || cell > 9) {
+                throw new Error(`Retry solution invalid at [${r}][${c}]: ${cell}`);
+              }
+              cleanRetrySolution[r][c] = cell;
+            }
+          }
           
           // Ensure givens match solution
           for (let row = 0; row < this.SIZE; row++) {
@@ -367,6 +410,25 @@ export class SudokuGenerator {
         }
       }
     }
+
+    // FINAL VALIDATION: Ensure solution is valid (contains 1-9 in each row/column/box)
+    const solutionValid = this.validateBoard(cleanSolution);
+    if (!solutionValid) {
+      console.error(`[Puzzle Generation] Generated solution is INVALID for seed: ${actualSeed}`);
+      throw new Error(`Failed to generate valid puzzle solution for seed: ${actualSeed}`);
+    }
+
+    // Validate that givens are a subset of solution
+    for (let row = 0; row < this.SIZE; row++) {
+      for (let col = 0; col < this.SIZE; col++) {
+        if (cleanGivens[row][col] !== 0 && cleanGivens[row][col] !== cleanSolution[row][col]) {
+          console.error(`[Puzzle Generation] CRITICAL: Given[${row}][${col}] = ${cleanGivens[row][col]} but Solution[${row}][${col}] = ${cleanSolution[row][col]}`);
+          throw new Error(`Puzzle generation failed: givens don't match solution`);
+        }
+      }
+    }
+
+    console.log(`[Puzzle Generation] ✅ Generated valid puzzle for seed: ${actualSeed}, difficulty: ${difficulty}`);
 
     return {
       givens: cleanGivens,
