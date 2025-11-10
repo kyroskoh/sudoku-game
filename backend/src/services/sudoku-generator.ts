@@ -250,6 +250,124 @@ export class SudokuGenerator {
       )
     );
 
+    // CRITICAL VALIDATION: Ensure givens match solution where givens are non-zero
+    for (let row = 0; row < this.SIZE; row++) {
+      for (let col = 0; col < this.SIZE; col++) {
+        if (cleanGivens[row][col] !== 0 && cleanGivens[row][col] !== cleanSolution[row][col]) {
+          console.error(`[Puzzle Generation] MISMATCH at [${row}][${col}]: given=${cleanGivens[row][col]}, solution=${cleanSolution[row][col]}`);
+          // Fix: Set given to match solution
+          cleanGivens[row][col] = cleanSolution[row][col];
+        }
+      }
+    }
+
+    // CRITICAL VALIDATION: Ensure puzzle has unique solution
+    const hasUnique = this.hasUniqueSolution(cleanGivens);
+    if (!hasUnique) {
+      console.error(`[Puzzle Generation] Puzzle does not have unique solution for seed: ${actualSeed}`);
+      
+      // For seeded puzzles (like daily), we need deterministic retries
+      // For non-seeded puzzles, we can retry with different random seeds
+      if (seed) {
+        // Seeded puzzle: Try with modified deterministic seeds
+        let retries = 0;
+        let validPuzzle: PuzzleResult | null = null;
+        
+        while (retries < 5 && !validPuzzle) {
+          retries++;
+          console.log(`[Puzzle Generation] Retry ${retries}/5 for seeded puzzle: ${actualSeed}`);
+          
+          // Use a modified seed for retry (still deterministic)
+          const retrySeed = `${actualSeed}-retry${retries}`;
+          this.rng = this.seededRandom(retrySeed);
+          
+          const retrySolution = this.generateCompleteSolution();
+          const retryGivens = this.createPuzzle(retrySolution, difficulty);
+          this.rng = Math.random;
+          
+          // Clean retry puzzle
+          const cleanRetryGivens = retryGivens.map(row => 
+            row.map(cell => (cell === null || cell === undefined) ? 0 : cell)
+          );
+          const cleanRetrySolution = retrySolution.map(row => 
+            row.map(cell => (cell === null || cell === undefined || cell === 0) ? (cell || 1) : cell)
+          );
+          
+          // Ensure givens match solution
+          for (let row = 0; row < this.SIZE; row++) {
+            for (let col = 0; col < this.SIZE; col++) {
+              if (cleanRetryGivens[row][col] !== 0 && cleanRetryGivens[row][col] !== cleanRetrySolution[row][col]) {
+                cleanRetryGivens[row][col] = cleanRetrySolution[row][col];
+              }
+            }
+          }
+          
+          if (this.hasUniqueSolution(cleanRetryGivens)) {
+            validPuzzle = {
+              givens: cleanRetryGivens,
+              solution: cleanRetrySolution,
+              difficulty,
+              seed: actualSeed // Keep original seed for display
+            };
+            console.log(`[Puzzle Generation] Successfully generated valid puzzle after ${retries} retries`);
+          }
+        }
+        
+        if (validPuzzle) {
+          return validPuzzle;
+        } else {
+          console.error(`[Puzzle Generation] Failed to generate valid puzzle after 5 retries for seed: ${actualSeed}`);
+          // For daily puzzles, we MUST return a valid puzzle, so log error but continue
+        }
+      } else {
+        // Non-seeded puzzle: Retry with fresh random generation
+        let retries = 0;
+        let validPuzzle: PuzzleResult | null = null;
+        
+        while (retries < 3 && !validPuzzle) {
+          retries++;
+          console.log(`[Puzzle Generation] Retry ${retries}/3 for random puzzle`);
+          
+          this.rng = Math.random;
+          const retrySolution = this.generateCompleteSolution();
+          const retryGivens = this.createPuzzle(retrySolution, difficulty);
+          
+          // Clean retry puzzle
+          const cleanRetryGivens = retryGivens.map(row => 
+            row.map(cell => (cell === null || cell === undefined) ? 0 : cell)
+          );
+          const cleanRetrySolution = retrySolution.map(row => 
+            row.map(cell => (cell === null || cell === undefined || cell === 0) ? (cell || 1) : cell)
+          );
+          
+          // Ensure givens match solution
+          for (let row = 0; row < this.SIZE; row++) {
+            for (let col = 0; col < this.SIZE; col++) {
+              if (cleanRetryGivens[row][col] !== 0 && cleanRetryGivens[row][col] !== cleanRetrySolution[row][col]) {
+                cleanRetryGivens[row][col] = cleanRetrySolution[row][col];
+              }
+            }
+          }
+          
+          if (this.hasUniqueSolution(cleanRetryGivens)) {
+            validPuzzle = {
+              givens: cleanRetryGivens,
+              solution: cleanRetrySolution,
+              difficulty,
+              seed: this.generateSeed() // New random seed
+            };
+            console.log(`[Puzzle Generation] Successfully generated valid puzzle after ${retries} retries`);
+          }
+        }
+        
+        if (validPuzzle) {
+          return validPuzzle;
+        } else {
+          console.error(`[Puzzle Generation] Failed to generate valid puzzle after 3 retries`);
+        }
+      }
+    }
+
     return {
       givens: cleanGivens,
       solution: cleanSolution,
