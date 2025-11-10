@@ -197,13 +197,24 @@ export class AttemptService {
    * Get leaderboard for a puzzle
    */
   async getLeaderboard(puzzleId: string, limit: number = 10): Promise<any[]> {
-    return prisma.leaderboard.findMany({
+    const results = await prisma.leaderboard.findMany({
       where: { puzzleId },
       orderBy: {
-        timeMs: 'asc'
+        timeMs: 'asc' // Faster times first (ascending = smaller numbers first)
       },
       take: limit
-    });
+    }) as any[];
+    
+    // Ensure displayName is included in response
+    return results.map(entry => ({
+      id: entry.id,
+      puzzleId: entry.puzzleId,
+      userId: entry.userId,
+      deviceId: entry.deviceId,
+      displayName: entry.displayName || null,
+      timeMs: entry.timeMs,
+      createdAt: entry.createdAt
+    }));
   }
 
   /**

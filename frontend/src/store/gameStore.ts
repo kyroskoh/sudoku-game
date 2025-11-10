@@ -29,6 +29,7 @@ interface GameStore extends GameState {
   resumeGame: () => void;
   completeGame: () => void;
   resetGame: () => void;
+  markAsReady: () => void; // Mark game as ready (unblur and start timer)
   updateSettings: (settings: Partial<Settings>) => void;
   
   // Helpers
@@ -63,6 +64,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
   startTime: null,
   isPaused: false,
   isComplete: false,
+  hasStarted: false,
   history: [],
   historyIndex: -1,
   settings: getSettings(),
@@ -82,6 +84,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
       startTime: null,
       isPaused: false,
       isComplete: false,
+      hasStarted: false, // Reset to show blur overlay
       history: [{ board: cloneBoard(board), notes: cloneNotes(notes) }],
       historyIndex: 0
     });
@@ -242,6 +245,12 @@ export const useGameStore = create<GameStore>((set, get) => ({
     set({ startTime: Date.now(), isPaused: false });
   },
 
+  markAsReady: () => {
+    // Unblur the puzzle and start the timer
+    set({ hasStarted: true });
+    get().startGame();
+  },
+
   pauseGame: () => {
     set({ isPaused: true });
   },
@@ -284,6 +293,21 @@ export const useGameStore = create<GameStore>((set, get) => ({
     const state = get();
     if (state.puzzle) {
       get().loadPuzzle(state.puzzle);
+    } else {
+      // Reset everything if no puzzle
+      set({
+        board: createEmptyBoard(),
+        notes: createEmptyNotes(),
+        selectedCell: null,
+        mistakes: 0,
+        hintsUsed: 0,
+        startTime: null,
+        isPaused: false,
+        isComplete: false,
+        hasStarted: false,
+        history: [],
+        historyIndex: -1
+      });
     }
   },
 

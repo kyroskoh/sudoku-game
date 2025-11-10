@@ -24,26 +24,42 @@ router.get('/global', async (req: Request, res: Response) => {
     const limitNum = parseInt(limit as string) || 10;
 
     // Get top times across ALL puzzles of this mode/difficulty
-    const leaderboard = await prisma.$queryRaw`
-      SELECT 
-        l.id,
-        l.puzzleId,
-        l.userId,
-        l.deviceId,
-        l.displayName,
-        l.timeMs,
-        l.createdAt,
-        p.mode,
-        p.difficulty
-      FROM Leaderboard l
-      INNER JOIN Puzzle p ON l.puzzleId = p.id
-      WHERE p.mode = ${mode}
-        AND p.difficulty = ${difficulty}
-      ORDER BY l.timeMs ASC
-      LIMIT ${limitNum}
-    `;
+    // Use Prisma query builder to ensure proper typing and displayName inclusion
+    const leaderboard = await prisma.leaderboard.findMany({
+      where: {
+        puzzle: {
+          mode: mode as string,
+          difficulty: difficulty as string
+        }
+      },
+      include: {
+        puzzle: {
+          select: {
+            mode: true,
+            difficulty: true
+          }
+        }
+      },
+      orderBy: {
+        timeMs: 'asc' // Faster times first (ascending = smaller numbers first)
+      },
+      take: limitNum
+    }) as any[];
 
-    res.json(leaderboard);
+    // Format response to match expected structure
+    const formatted = leaderboard.map(entry => ({
+      id: entry.id,
+      puzzleId: entry.puzzleId,
+      userId: entry.userId,
+      deviceId: entry.deviceId,
+      displayName: entry.displayName || null,
+      timeMs: entry.timeMs,
+      createdAt: entry.createdAt,
+      mode: entry.puzzle.mode,
+      difficulty: entry.puzzle.difficulty
+    }));
+
+    res.json(formatted);
   } catch (error) {
     console.error('Error getting global leaderboard:', error);
     res.status(500).json({ error: 'Failed to get global leaderboard' });

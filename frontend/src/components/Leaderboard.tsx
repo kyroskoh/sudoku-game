@@ -130,11 +130,16 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({
                     {index + 1}
                   </span>
                 </td>
-                <td>
-                  {entry.displayName || 
-                   (entry.userId ? `User ${entry.userId.slice(0, 8)}` : 
-                   entry.deviceId ? `Player ${entry.deviceId.slice(0, 8)}` : 
-                   'Anonymous')}
+                <td className={styles.playerName}>
+                  {entry.displayName ? (
+                    <span className={styles.name}>{entry.displayName}</span>
+                  ) : (
+                    <span className={styles.anonymous}>
+                      {entry.userId ? `User ${entry.userId.slice(0, 8)}` : 
+                       entry.deviceId ? `Player ${entry.deviceId.slice(0, 8)}` : 
+                       'Anonymous'}
+                    </span>
+                  )}
                 </td>
                 <td className={styles.time}>{formatTime(entry.timeMs)}</td>
                 <td>{new Date(entry.createdAt).toLocaleDateString()}</td>

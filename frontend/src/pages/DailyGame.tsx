@@ -22,7 +22,7 @@ export const DailyGame: React.FC = () => {
   const [streak, setStreak] = useState({ currentStreak: 0, lastPlayedDate: null });
   const [showNameEntry, setShowNameEntry] = useState(false);
   const [completionAcknowledged, setCompletionAcknowledged] = useState(false);
-  const { puzzle, loadPuzzle, startGame, isComplete, resetGame } = useGameStore();
+  const { puzzle, loadPuzzle, isComplete, resetGame } = useGameStore();
 
   // Clear puzzle when entering daily mode to show difficulty selection
   useEffect(() => {
@@ -57,7 +57,7 @@ export const DailyGame: React.FC = () => {
       const response = await api.getDailyPuzzle(selectedDifficulty, undefined, deviceId);
       loadPuzzle(response.puzzle);
       setStreak(response.streak);
-      startGame();
+      // Don't start game automatically - wait for "I'm Ready" button
       setShowSelector(false);
     } catch (error) {
       console.error('Error loading daily puzzle:', error);

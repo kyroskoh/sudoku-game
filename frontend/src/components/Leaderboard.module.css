@@ -99,6 +99,21 @@
   font-weight: 600;
 }
 
+.playerName {
+  font-weight: 500;
+}
+
+.name {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.anonymous {
+  color: var(--text-secondary);
+  font-style: italic;
+  opacity: 0.7;
+}
+
 .empty {
   text-align: center;
   padding: 3rem;

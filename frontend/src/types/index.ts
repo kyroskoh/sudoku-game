@@ -30,6 +30,7 @@ export interface GameState {
   startTime: number | null;
   isPaused: boolean;
   isComplete: boolean;
+  hasStarted: boolean; // Whether the user has clicked "I'm Ready"
   history: HistoryState[];
   historyIndex: number;
 }

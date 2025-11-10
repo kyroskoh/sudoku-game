@@ -20,7 +20,7 @@ export const CasualGame: React.FC = () => {
   const [showSelector, setShowSelector] = useState(true);
   const [showNameEntry, setShowNameEntry] = useState(false);
   const [completionAcknowledged, setCompletionAcknowledged] = useState(false);
-  const { puzzle, loadPuzzle, startGame, isComplete, resetGame } = useGameStore();
+  const { puzzle, loadPuzzle, isComplete, resetGame } = useGameStore();
 
   // Clear puzzle when entering casual mode to show difficulty selection
   useEffect(() => {
@@ -43,7 +43,7 @@ export const CasualGame: React.FC = () => {
     try {
       const newPuzzle = await api.getPuzzle('casual', selectedDifficulty);
       loadPuzzle(newPuzzle);
-      startGame();
+      // Don't start game automatically - wait for "I'm Ready" button
       setShowSelector(false);
     } catch (error) {
       console.error('Error loading puzzle:', error);

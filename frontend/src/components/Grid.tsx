@@ -14,11 +14,13 @@ export const Grid: React.FC = () => {
     selectedCell,
     settings,
     isComplete,
+    hasStarted,
     selectCell,
     setCellValue,
     toggleNote,
     inputMode,
-    completeGame
+    completeGame,
+    markAsReady
   } = useGameStore();
 
   const [showAnswers, setShowAnswers] = useState(false);
@@ -119,10 +121,14 @@ export const Grid: React.FC = () => {
   };
 
   const handleCellClick = (row: number, col: number) => {
+    // Don't allow interaction until game has started
+    if (!hasStarted) return;
     selectCell(row, col);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
+    // Don't allow keyboard input until game has started
+    if (!hasStarted) return;
     if (!selectedCell) return;
 
     const { row, col } = selectedCell;
@@ -228,14 +234,31 @@ export const Grid: React.FC = () => {
   };
 
   return (
-    <div
-      className={styles.grid}
-      role="grid"
-      onKeyDown={handleKeyPress}
-      tabIndex={-1}
-    >
-      {board.flatMap((row, rowIndex) =>
-        row.map((_, colIndex) => renderCell(rowIndex, colIndex, rowIndex * 9 + colIndex))
+    <div className={styles.gridContainer}>
+      <div
+        className={`${styles.grid} ${!hasStarted ? styles.blurred : ''}`}
+        role="grid"
+        onKeyDown={hasStarted ? handleKeyPress : undefined}
+        tabIndex={hasStarted ? -1 : undefined}
+      >
+        {board.flatMap((row, rowIndex) =>
+          row.map((_, colIndex) => renderCell(rowIndex, colIndex, rowIndex * 9 + colIndex))
+        )}
+      </div>
+      
+      {!hasStarted && (
+        <div className={styles.readyOverlay}>
+          <div className={styles.readyContent}>
+            <h2 className={styles.readyTitle}>Ready to Start?</h2>
+            <p className={styles.readySubtitle}>Take your time to review the puzzle</p>
+            <button 
+              className={styles.readyButton}
+              onClick={markAsReady}
+            >
+              I'm Ready! 🚀
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );
