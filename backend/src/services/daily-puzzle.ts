@@ -41,12 +41,21 @@ export class DailyPuzzleService {
     // If doesn't exist, generate it
     if (!puzzle) {
       console.log(`[Daily Puzzle] Generating new puzzle for ${dateKey}`);
-      puzzle = await this.generateDailyPuzzle(todaySGT, dateKey, difficulty);
+      try {
+        puzzle = await this.generateDailyPuzzle(todaySGT, dateKey, difficulty);
+        if (!puzzle) {
+          throw new Error('Puzzle generation returned null');
+        }
+        console.log(`[Daily Puzzle] Successfully generated puzzle ${puzzle.id} for ${dateKey}`);
+      } catch (error) {
+        console.error(`[Daily Puzzle] ERROR generating puzzle for ${dateKey}:`, error);
+        throw error; // Re-throw to be caught by route handler
+      }
     } else {
       console.log(`[Daily Puzzle] Found existing puzzle for ${dateKey}`);
     }
 
-    // TypeScript guard: puzzle is guaranteed to exist at this point
+    // Ensure puzzle exists (should never be null at this point, but TypeScript needs this)
     if (!puzzle) {
       throw new Error('Failed to get or generate daily puzzle');
     }
@@ -69,24 +78,34 @@ export class DailyPuzzleService {
     // Create salted seed for actual puzzle generation (not stored in DB)
     const saltedSeed = this.createSaltedSeed(dateKey);
     
-    console.log(`[Daily Puzzle] Generating ${difficulty} puzzle with seed: ${dateKey} (salted)`);
+    console.log(`[Daily Puzzle] Generating ${difficulty} puzzle with seed: ${dateKey} (salted: ${saltedSeed.substring(0, 20)}...)`);
     
-    // Generate puzzle using salted seed
-    const puzzleData = sudokuGenerator.generatePuzzle(difficulty, saltedSeed);
+    try {
+      // Generate puzzle using salted seed
+      const puzzleData = sudokuGenerator.generatePuzzle(difficulty, saltedSeed);
+      
+      console.log(`[Daily Puzzle] Puzzle generated successfully. Givens count: ${puzzleData.givens.flat().filter(c => c !== 0).length}`);
+      console.log(`[Daily Puzzle] Solution validated: ${puzzleData.solution.every(row => row.every(cell => cell >= 1 && cell <= 9))}`);
 
-    // Store with original dateKey (not salted) for consistency and lookup
-    const puzzle = await prisma.puzzle.create({
-      data: {
-        mode: 'daily',
-        difficulty,
-        date,
-        seed: dateKey, // Store unsalted seed for lookup and display
-        givens: JSON.stringify(puzzleData.givens),
-        solution: JSON.stringify(puzzleData.solution)
-      }
-    });
+      // Store with original dateKey (not salted) for consistency and lookup
+      const puzzle = await prisma.puzzle.create({
+        data: {
+          mode: 'daily',
+          difficulty,
+          date,
+          seed: dateKey, // Store unsalted seed for lookup and display
+          givens: JSON.stringify(puzzleData.givens),
+          solution: JSON.stringify(puzzleData.solution)
+        }
+      });
 
-    return puzzle;
+      console.log(`[Daily Puzzle] Puzzle saved to database with ID: ${puzzle.id}`);
+      return puzzle;
+    } catch (error) {
+      console.error(`[Daily Puzzle] Failed to generate puzzle for ${dateKey}:`, error);
+      console.error(`[Daily Puzzle] Error details:`, error instanceof Error ? error.message : String(error));
+      throw error;
+    }
   }
 
   /**
