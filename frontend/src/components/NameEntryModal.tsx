@@ -21,12 +21,17 @@ export const NameEntryModal: React.FC<NameEntryModalProps> = ({
 }) => {
   const [name, setName] = useState('');
   const [error, setError] = useState('');
+  const [hasStoredName, setHasStoredName] = useState(false);
 
   useEffect(() => {
     // Pre-fill with stored name if available
     const storedName = getStoredName();
     if (storedName) {
       setName(storedName);
+      setHasStoredName(true);
+    } else {
+      setName('');
+      setHasStoredName(false);
     }
   }, [isOpen]);
 
@@ -75,9 +80,14 @@ export const NameEntryModal: React.FC<NameEntryModalProps> = ({
   return (
     <div className={styles.overlay}>
       <div className={styles.modal}>
-        <h2 className={styles.title}>🏆 Enter Your Name</h2>
+        <h2 className={styles.title}>
+          {hasStoredName ? '✏️ Update Your Name' : '🏆 Enter Your Name'}
+        </h2>
         <p className={styles.subtitle}>
-          Your score will be added to the leaderboard!
+          {hasStoredName 
+            ? 'Update your name and resubmit to the leaderboard!'
+            : 'Your score will be added to the leaderboard!'
+          }
         </p>
 
         <form onSubmit={handleSubmit}>
@@ -102,7 +112,7 @@ export const NameEntryModal: React.FC<NameEntryModalProps> = ({
               type="submit" 
               className={styles.submitButton}
             >
-              Submit to Leaderboard
+              {hasStoredName ? 'Update & Resubmit' : 'Submit to Leaderboard'}
             </button>
             <button 
               type="button" 
@@ -115,7 +125,10 @@ export const NameEntryModal: React.FC<NameEntryModalProps> = ({
         </form>
 
         <p className={styles.hint}>
-          💡 Your name will be saved for next time
+          {hasStoredName 
+            ? '💡 You can update your name anytime and resubmit'
+            : '💡 Your name will be saved for next time'
+          }
         </p>
       </div>
     </div>

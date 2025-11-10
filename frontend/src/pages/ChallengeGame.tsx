@@ -10,7 +10,6 @@ import { NumberPad } from '../components/NumberPad';
 import { Controls } from '../components/Controls';
 import { NameEntryModal } from '../components/NameEntryModal';
 import { api } from '../utils/api';
-import { getStoredName } from '../utils/localStorage';
 import type { Difficulty } from '../types';
 import styles from './GamePage.module.css';
 
@@ -29,17 +28,11 @@ export const ChallengeGame: React.FC = () => {
     setShowSelector(true);
   }, []);
 
-  // Show name entry modal when puzzle is completed
+  // Show name entry modal when puzzle is completed (always show, pre-filled if name exists)
   useEffect(() => {
     if (isComplete && !completionAcknowledged) {
-      const storedName = getStoredName();
-      if (!storedName) {
-        // Show name entry modal if no name is stored
-        setShowNameEntry(true);
-      } else {
-        // If name already exists, immediately acknowledge completion to show modal
-        setCompletionAcknowledged(true);
-      }
+      // Always show name entry modal to allow name entry/update and resubmission
+      setShowNameEntry(true);
     }
   }, [isComplete, completionAcknowledged]);
 
