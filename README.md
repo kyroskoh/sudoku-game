@@ -13,7 +13,7 @@ A modern, feature-rich Sudoku game built with React, TypeScript, Node.js, and SQ
 
 ### 🎯 Core Features
 - ✏️ **Pen & Pencil Modes**: Switch between number entry and candidate notes
-- ↶ **Undo/Redo**: Full history support for your moves
+- ↶ **Undo/Redo**: Full history support for your moves (50-step history)
 - 💡 **Smart Hints**: Get help when you're stuck
 - ⏱️ **Timer & Stats**: Track your progress and best times
 - 🎨 **Multiple Themes**: Classic, Dark, Ocean, Forest
@@ -21,6 +21,12 @@ A modern, feature-rich Sudoku game built with React, TypeScript, Node.js, and SQ
 - 💾 **Auto-Save**: Progress is automatically saved locally
 - 🌐 **Offline Support**: Play without an internet connection
 - 🔄 **Background Sync**: Automatically sync your progress when online
+- 🏆 **Global Leaderboard**: Top 10 rankings per mode and difficulty
+- 👤 **Name Entry**: Submit your name to appear on leaderboards
+- 🌏 **Daily Puzzles**: One puzzle per day (per difficulty) with streak tracking
+- 🔐 **Secure Puzzles**: Salted seed generation prevents cheating
+- 🎯 **Difficulty Selection**: Choose from Easy, Medium, Hard, Expert, Extreme
+- 🚀 **Ready to Start**: Blur overlay with "I'm Ready" button before timer starts
 
 ### ♿ Accessibility
 - Keyboard-first navigation
@@ -180,7 +186,7 @@ Click the "🎨 Theme" button in the header to cycle through themes.
 - `POST /api/puzzles/:id/validate` - Validate solution
 
 ### Daily
-- `GET /api/daily?userId={id}&deviceId={id}` - Get today's daily puzzle with streak
+- `GET /api/daily?difficulty={difficulty}&userId={id}&deviceId={id}` - Get today's daily puzzle with streak
 
 ### Attempts
 - `POST /api/attempts` - Create attempt
@@ -190,7 +196,11 @@ Click the "🎨 Theme" button in the header to cycle through themes.
 ### Sync & Stats
 - `POST /api/sync` - Sync local attempts to server
 - `GET /api/stats?userId={id}&deviceId={id}` - Get user stats
-- `GET /api/leaderboard?puzzleId={id}` - Get leaderboard
+- `GET /api/leaderboard?puzzleId={id}` - Get leaderboard for specific puzzle
+- `GET /api/leaderboard/global?mode={mode}&difficulty={difficulty}&limit={limit}` - Get global leaderboard
+
+### Devices
+- `PUT /api/devices/:id` - Update device (e.g., display name)
 
 ### Health
 - `GET /api/health` - Health check
@@ -281,7 +291,147 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - UI/UX design principles from modern web applications
 - Built with love for puzzle enthusiasts worldwide
 
+## 🚀 Future Enhancements & Improvements
+
+We're constantly working to improve Sudoku Mastery! Here are some planned features and enhancements:
+
+### 🎮 Gameplay Enhancements
+- **Advanced Solving Techniques**: Visual hints for advanced techniques (X-Wing, Swordfish, etc.)
+- **Auto-Fill Candidates**: Automatically fill in all possible candidates for empty cells
+- **Mistake Detection**: Real-time validation with visual feedback
+- **Color Coding**: Color-code candidates for advanced solving strategies
+- **Multiple Solutions**: Support for puzzles with multiple valid solutions
+- **Custom Puzzles**: Allow users to create and share their own puzzles
+- **Puzzle Import/Export**: Import puzzles from other formats (CSV, text, etc.)
+- **Hint System Enhancement**: Contextual hints based on current board state
+- **Tutorial Mode**: Interactive tutorial for beginners
+- **Practice Mode**: Focus on specific solving techniques
+
+### 🏆 Social & Competition Features
+- **Friends System**: Add friends and compete with them
+- **Private Leaderboards**: Create custom leaderboards for groups
+- **Achievements & Badges**: Unlock achievements for various milestones
+- **Daily Challenges**: Special themed challenges with unique rewards
+- **Tournaments**: Scheduled tournaments with brackets
+- **Replay System**: Watch replays of top players' solutions
+- **Sharing**: Share completion times and achievements on social media
+- **Comments**: Comment on puzzles and discuss strategies
+- **Follow Players**: Follow top players and see their progress
+
+### 📊 Analytics & Statistics
+- **Detailed Analytics**: Comprehensive stats dashboard
+- **Progress Tracking**: Visual progress charts over time
+- **Performance Metrics**: Average solve time, accuracy, improvement trends
+- **Difficulty Analysis**: Track performance by difficulty level
+- **Time Analysis**: Breakdown of time spent per puzzle section
+- **Mistake Patterns**: Identify common mistake patterns
+- **Personal Records**: Track all-time bests and recent improvements
+- **Heatmaps**: Visual representation of where you spend most time
+
+### 🎨 UI/UX Improvements
+- **Animations**: Smooth transitions and animations for better feedback
+- **Sound Effects**: Optional sound effects for actions (cell fill, error, completion)
+- **Haptic Feedback**: Vibration feedback on mobile devices
+- **Custom Themes**: User-created themes and theme marketplace
+- **Grid Customization**: Adjustable grid size, colors, and styles
+- **Dark Mode Auto-Switch**: Automatically switch based on system preferences
+- **Compact Mode**: Condensed UI for smaller screens
+- **Gesture Support**: Swipe gestures for mobile navigation
+- **Accessibility Improvements**: Enhanced screen reader support, keyboard navigation
+- **Multi-Language Support**: Internationalization (i18n) for multiple languages
+
+### 🔧 Technical Improvements
+- **Progressive Web App (PWA)**: Install as a native app
+- **Service Workers**: Enhanced offline capabilities and caching
+- **WebSocket Support**: Real-time leaderboard updates
+- **GraphQL API**: More efficient data fetching
+- **Database Optimization**: Query optimization and indexing improvements
+- **Caching Strategy**: Improved caching for puzzles and leaderboards
+- **CDN Integration**: Faster asset delivery worldwide
+- **Load Balancing**: Handle increased traffic with load balancing
+- **Monitoring & Analytics**: Application performance monitoring (APM)
+- **Error Tracking**: Comprehensive error tracking and reporting
+- **A/B Testing**: Test new features with A/B testing framework
+
+### 📱 Platform Expansion
+- **Mobile Apps**: Native iOS and Android applications
+- **Desktop App**: Electron-based desktop application
+- **Browser Extensions**: Chrome/Firefox extensions for quick access
+- **Smartwatch Support**: Quick puzzle solving on wearables
+- **Voice Commands**: Voice input for accessibility
+
+### 🤖 AI & Machine Learning
+- **AI Difficulty Adjustment**: Automatically adjust difficulty based on player skill
+- **Smart Puzzle Recommendations**: Recommend puzzles based on solving history
+- **Pattern Recognition**: Identify and suggest solving techniques
+- **Cheat Detection**: ML-based detection of suspicious solving patterns
+- **Personalized Experience**: Customize experience based on playing style
+
+### 🌐 Community Features
+- **Forums**: Community forums for discussions
+- **Puzzle Ratings**: Rate puzzles and see community ratings
+- **Puzzle Collections**: Curated collections of puzzles
+- **User-Generated Content**: Allow users to submit puzzles
+- **Moderation Tools**: Community moderation for user content
+- **News & Updates**: In-app news feed for updates and announcements
+
+### 🔐 Security & Privacy
+- **User Authentication**: Optional account creation with email/social login
+- **Privacy Controls**: Granular privacy settings
+- **Data Export**: Export all user data
+- **GDPR Compliance**: Full GDPR compliance for EU users
+- **Two-Factor Authentication**: Enhanced security for accounts
+- **Rate Limiting**: Prevent abuse with intelligent rate limiting
+
+### 📈 Performance Optimizations
+- **Code Splitting**: Lazy load components for faster initial load
+- **Image Optimization**: Optimize and lazy load images
+- **Bundle Size Reduction**: Reduce JavaScript bundle size
+- **Database Query Optimization**: Optimize slow queries
+- **Caching Layers**: Implement Redis for faster data access
+- **CDN for Static Assets**: Serve static assets via CDN
+
+### 🧪 Testing & Quality
+- **Unit Tests**: Comprehensive unit test coverage
+- **Integration Tests**: End-to-end testing
+- **Performance Tests**: Load testing and performance benchmarks
+- **Accessibility Tests**: Automated accessibility testing
+- **Cross-Browser Testing**: Ensure compatibility across browsers
+- **Mobile Device Testing**: Test on various mobile devices
+
+### 📚 Documentation & Developer Experience
+- **API Documentation**: Comprehensive API documentation (Swagger/OpenAPI)
+- **Developer Guide**: Detailed guide for contributors
+- **Architecture Documentation**: Detailed architecture diagrams
+- **Deployment Guides**: Step-by-step deployment guides
+- **Contributing Guidelines**: Clear contributing guidelines
+
+---
+
+## 🤝 Contributing
+
+We welcome contributions! If you'd like to help implement any of these features or suggest new ones:
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+### Priority Features
+If you're looking for a good place to start, these features are high priority:
+- ✅ Unit tests for core game logic
+- ✅ Enhanced hint system with contextual suggestions
+- ✅ Achievement system
+- ✅ PWA support
+- ✅ Multi-language support
+- ✅ Mobile app development
+
 ## 📧 Contact
+
+**Developer**: Kyros Koh  
+📧 Email: me@kyroskoh.com  
+🐙 GitHub: [github.com/kyroskoh](https://github.com/kyroskoh)
 
 For questions or support, please open an issue on GitHub.
 
