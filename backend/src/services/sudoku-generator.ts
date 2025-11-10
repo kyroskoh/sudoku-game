@@ -22,18 +22,33 @@ export class SudokuGenerator {
    * Generate a complete valid Sudoku solution
    */
   private generateCompleteSolution(): SudokuBoard {
-    const board: SudokuBoard = Array(this.SIZE).fill(0).map(() => Array(this.SIZE).fill(0));
+    // Initialize board with zeros (ensure no undefined values)
+    const board: SudokuBoard = [];
+    for (let row = 0; row < this.SIZE; row++) {
+      board[row] = [];
+      for (let col = 0; col < this.SIZE; col++) {
+        board[row][col] = 0;
+      }
+    }
+    
     const success = this.fillBoard(board);
     
     if (!success) {
       throw new Error('Failed to generate complete Sudoku solution - backtracking failed');
     }
     
-    // Verify board is completely filled (no zeros)
+    // Verify board is completely filled (no zeros or undefined)
     for (let row = 0; row < this.SIZE; row++) {
       for (let col = 0; col < this.SIZE; col++) {
-        if (board[row][col] === 0) {
+        const cell = board[row][col];
+        if (cell === undefined || cell === null) {
+          throw new Error(`Generated solution has undefined/null cell at [${row}][${col}]`);
+        }
+        if (cell === 0) {
           throw new Error(`Generated solution has empty cell at [${row}][${col}]`);
+        }
+        if (cell < 1 || cell > 9) {
+          throw new Error(`Generated solution has invalid value ${cell} at [${row}][${col}]`);
         }
       }
     }
@@ -47,6 +62,12 @@ export class SudokuGenerator {
   private fillBoard(board: SudokuBoard): boolean {
     for (let row = 0; row < this.SIZE; row++) {
       for (let col = 0; col < this.SIZE; col++) {
+        // Ensure cell exists and is 0 (empty)
+        if (board[row] === undefined || board[row][col] === undefined) {
+          console.error(`[fillBoard] Board has undefined at [${row}][${col}]`);
+          return false;
+        }
+        
         if (board[row][col] === 0) {
           // Shuffle numbers for randomness
           const numbers = this.shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9]);
@@ -59,14 +80,17 @@ export class SudokuGenerator {
                 return true;
               }
               
+              // Backtrack: reset to 0
               board[row][col] = 0;
             }
           }
           
+          // No valid number found for this cell
           return false;
         }
       }
     }
+    // All cells filled
     return true;
   }
 
@@ -247,7 +271,37 @@ export class SudokuGenerator {
       this.rng = Math.random;
     }
 
-    const solution = this.generateCompleteSolution();
+    // Try to generate solution with retries if backtracking fails
+    let solution: SudokuBoard | null = null;
+    let retries = 0;
+    const maxRetries = 10;
+    
+    while (retries < maxRetries && !solution) {
+      try {
+        solution = this.generateCompleteSolution();
+        break; // Success!
+      } catch (error) {
+        retries++;
+        if (retries >= maxRetries) {
+          // Restore default RNG before throwing
+          this.rng = Math.random;
+          throw new Error(`Failed to generate solution after ${maxRetries} retries. Seed: ${actualSeed}. Error: ${error instanceof Error ? error.message : String(error)}`);
+        }
+        // Modify seed slightly for retry (add retry counter to make it different)
+        if (seed) {
+          const retrySeed = `${seed}-retry${retries}`;
+          this.rng = this.seededRandom(retrySeed);
+        }
+        // For non-seeded, Math.random is already different each time
+      }
+    }
+    
+    // Ensure solution was generated
+    if (!solution) {
+      this.rng = Math.random;
+      throw new Error('Solution generation failed - solution is null');
+    }
+    
     const givens = this.createPuzzle(solution, difficulty);
 
     // Restore default RNG
