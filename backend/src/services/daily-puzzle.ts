@@ -175,6 +175,41 @@ export class DailyPuzzleService {
   }
 
   /**
+   * Check if user has completed today's daily puzzle for a specific difficulty
+   */
+  async hasCompletedToday(userId: string | undefined, deviceId: string | undefined, difficulty: Difficulty): Promise<boolean> {
+    if (!userId && !deviceId) {
+      return false;
+    }
+
+    const todaySGT = this.getTodayDateSGT();
+    const dateKey = this.getDateKey(todaySGT, difficulty);
+
+    // Find the puzzle for today with this difficulty
+    const puzzle = await prisma.puzzle.findFirst({
+      where: {
+        mode: 'daily',
+        seed: dateKey
+      }
+    });
+
+    if (!puzzle) {
+      return false;
+    }
+
+    // Check if there's a completed attempt for this puzzle
+    const completedAttempt = await prisma.attempt.findFirst({
+      where: {
+        puzzleId: puzzle.id,
+        result: 'completed',
+        ...(userId ? { userId } : { deviceId })
+      }
+    });
+
+    return !!completedAttempt;
+  }
+
+  /**
    * Get user's streak information
    */
   async getStreakInfo(userId: string | null, deviceId: string | null): Promise<{ currentStreak: number; lastPlayedDate: Date | null }> {

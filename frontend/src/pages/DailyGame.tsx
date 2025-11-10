@@ -22,19 +22,40 @@ export const DailyGame: React.FC = () => {
   const [streak, setStreak] = useState({ currentStreak: 0, lastPlayedDate: null });
   const [showNameEntry, setShowNameEntry] = useState(false);
   const [completionAcknowledged, setCompletionAcknowledged] = useState(false);
+  const [isCompleted, setIsCompleted] = useState(false);
   const { puzzle, loadPuzzle, isComplete, resetGame } = useGameStore();
 
   // Clear puzzle when entering daily mode to show difficulty selection
   useEffect(() => {
     resetGame();
     setShowSelector(true);
+    setIsCompleted(false);
   }, []);
+  
+  // Check completion status when difficulty changes
+  useEffect(() => {
+    const checkCompletion = async () => {
+      if (!showSelector) return; // Only check when selector is visible
+      
+      try {
+        const deviceId = getDeviceId();
+        const response = await api.getDailyPuzzle(selectedDifficulty, undefined, deviceId);
+        setIsCompleted(response.isCompleted);
+      } catch (error) {
+        console.error('Error checking completion status:', error);
+      }
+    };
+    
+    checkCompletion();
+  }, [selectedDifficulty, showSelector]);
 
   // Show name entry modal when puzzle is completed (always show, pre-filled if name exists)
   useEffect(() => {
     if (isComplete && !completionAcknowledged) {
       // Always show name entry modal to allow name entry/update and resubmission
       setShowNameEntry(true);
+      // Mark as completed to prevent replay
+      setIsCompleted(true);
     }
   }, [isComplete, completionAcknowledged]);
 
@@ -55,8 +76,18 @@ export const DailyGame: React.FC = () => {
     try {
       const deviceId = getDeviceId();
       const response = await api.getDailyPuzzle(selectedDifficulty, undefined, deviceId);
+      
+      // Check if already completed
+      if (response.isCompleted) {
+        setIsCompleted(true);
+        setShowSelector(false);
+        setLoading(false);
+        return;
+      }
+      
       loadPuzzle(response.puzzle);
       setStreak(response.streak);
+      setIsCompleted(false);
       // Don't start game automatically - wait for "I'm Ready" button
       setShowSelector(false);
     } catch (error) {
@@ -72,6 +103,7 @@ export const DailyGame: React.FC = () => {
     setShowSelector(true);
     setCompletionAcknowledged(false);
     setShowNameEntry(false);
+    setIsCompleted(false);
   };
 
   if (loading) {
@@ -114,13 +146,74 @@ export const DailyGame: React.FC = () => {
               </button>
             ))}
           </div>
-          <button 
-            className={styles.startButton} 
-            onClick={handleStartDaily}
-            disabled={loading}
-          >
-            {loading ? 'Loading...' : `Start ${selectedDifficulty.charAt(0).toUpperCase() + selectedDifficulty.slice(1)} Daily`}
-          </button>
+          {isCompleted ? (
+            <div className={styles.completedMessage}>
+              <div className={styles.completedIcon}>✅</div>
+              <div className={styles.completedText}>
+                <h3>Already Completed!</h3>
+                <p>You've already completed today's {selectedDifficulty} daily puzzle.</p>
+                <p>Come back tomorrow for a new challenge!</p>
+              </div>
+              <button 
+                className={styles.secondaryButton} 
+                onClick={() => navigate('/leaderboard')}
+                style={{ marginTop: '1rem' }}
+              >
+                🏆 View Leaderboard
+              </button>
+            </div>
+          ) : (
+            <button 
+              className={styles.startButton} 
+              onClick={handleStartDaily}
+              disabled={loading}
+            >
+              {loading ? 'Loading...' : `Start ${selectedDifficulty.charAt(0).toUpperCase() + selectedDifficulty.slice(1)} Daily`}
+            </button>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // If puzzle is completed, show completion message instead of game
+  if (isCompleted && !isComplete) {
+    return (
+      <div className={styles.gamePage}>
+        <div className={styles.header}>
+          <h1 className={styles.title}>📅 Daily Challenge</h1>
+          <p className={styles.subtitle}>
+            {new Date().toLocaleDateString('en-US', {
+              weekday: 'long',
+              month: 'long',
+              day: 'numeric',
+              year: 'numeric'
+            })}
+          </p>
+        </div>
+        <div className={styles.difficultySelector}>
+          <div className={styles.completedMessage}>
+            <div className={styles.completedIcon}>✅</div>
+            <div className={styles.completedText}>
+              <h3>Already Completed!</h3>
+              <p>You've already completed today's {selectedDifficulty} daily puzzle.</p>
+              <p>Come back tomorrow for a new challenge!</p>
+            </div>
+            <button 
+              className={styles.secondaryButton} 
+              onClick={() => navigate('/leaderboard')}
+              style={{ marginTop: '1rem' }}
+            >
+              🏆 View Leaderboard
+            </button>
+            <button 
+              className={styles.secondaryButton} 
+              onClick={handleChangeDifficulty}
+              style={{ marginTop: '0.5rem' }}
+            >
+              ← Try Another Difficulty
+            </button>
+          </div>
         </div>
       </div>
     );

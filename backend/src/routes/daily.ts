@@ -34,8 +34,13 @@ router.get('/', async (req: Request, res: Response) => {
       userId as string || null,
       deviceId as string || null
     );
+    const isCompleted = await dailyPuzzleService.hasCompletedToday(
+      userId as string | undefined,
+      deviceId as string | undefined,
+      selectedDifficulty as any
+    );
 
-    res.json({ puzzle, streak });
+    res.json({ puzzle, streak, isCompleted });
   } catch (error) {
     console.error('Error getting daily puzzle:', error);
     res.status(500).json({ error: 'Failed to get daily puzzle' });
