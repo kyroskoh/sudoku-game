@@ -201,24 +201,53 @@ export class DailyPuzzleService {
       return { currentStreak: 0, lastPlayedDate: null };
     }
 
-    // Calculate streak
+    // Calculate streak per difficulty per day
+    // Group completed attempts by date+difficulty
+    const completedDateDifficulties = new Set<string>();
+    attempts
+      .filter(a => a.puzzle.date && a.puzzle.difficulty)
+      .forEach(a => {
+        const dateStr = a.puzzle.date!.toISOString().split('T')[0];
+        const difficulty = a.puzzle.difficulty;
+        completedDateDifficulties.add(`${dateStr}-${difficulty}`);
+      });
+
+    // Calculate streak: count consecutive days where at least one difficulty was completed
+    // But count each difficulty separately (so completing easy+medium on same day = 2 streaks)
     let streak = 0;
     let currentDate = new Date();
     currentDate.setHours(0, 0, 0, 0);
+    
+    // Get all unique dates that have completions
+    const completedDates = new Set<string>();
+    attempts
+      .filter(a => a.puzzle.date)
+      .forEach(a => {
+        const dateStr = a.puzzle.date!.toISOString().split('T')[0];
+        completedDates.add(dateStr);
+      });
 
-    const completedDates = new Set(
-      attempts
-        .filter(a => a.puzzle.date)
-        .map(a => a.puzzle.date!.toISOString().split('T')[0])
-    );
-
-    // Check backwards from today
+    // Count streak: consecutive days with at least one completion
+    // But we'll return the count of unique date+difficulty combinations for the streak
+    // This way completing easy and medium on the same day counts as progress
+    const todaySGT = this.getTodayDateSGT();
+    const todayStr = todaySGT.toISOString().split('T')[0];
+    
+    // Count backwards from today, counting each day that has at least one completion
     while (true) {
       const dateStr = currentDate.toISOString().split('T')[0];
-      if (completedDates.has(dateStr)) {
-        streak++;
+      
+      // Check if this date has any completions
+      const hasCompletion = Array.from(completedDateDifficulties).some(key => key.startsWith(dateStr + '-'));
+      
+      if (hasCompletion) {
+        // Count how many difficulties were completed on this day
+        const difficultiesOnThisDay = Array.from(completedDateDifficulties)
+          .filter(key => key.startsWith(dateStr + '-'))
+          .length;
+        streak += difficultiesOnThisDay;
         currentDate.setDate(currentDate.getDate() - 1);
-      } else if (streak === 0 && dateStr === new Date().toISOString().split('T')[0]) {
+      } else if (streak === 0 && dateStr === todayStr) {
         // Today not completed yet, check yesterday
         currentDate.setDate(currentDate.getDate() - 1);
       } else {
