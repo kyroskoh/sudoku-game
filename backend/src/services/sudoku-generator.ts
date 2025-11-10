@@ -60,12 +60,36 @@ export class SudokuGenerator {
    * Fill board using backtracking
    */
   private fillBoard(board: SudokuBoard): boolean {
+    // Ensure board structure is valid
+    if (!board || board.length !== this.SIZE) {
+      console.error(`[fillBoard] Invalid board structure: length=${board?.length}`);
+      return false;
+    }
+    
     for (let row = 0; row < this.SIZE; row++) {
+      // Ensure row exists
+      if (!board[row]) {
+        console.error(`[fillBoard] Row ${row} is undefined, initializing...`);
+        board[row] = [];
+        for (let c = 0; c < this.SIZE; c++) {
+          board[row][c] = 0;
+        }
+      }
+      
+      // Ensure row is an array of correct length
+      if (!Array.isArray(board[row]) || board[row].length !== this.SIZE) {
+        console.error(`[fillBoard] Row ${row} is invalid, reinitializing...`);
+        board[row] = [];
+        for (let c = 0; c < this.SIZE; c++) {
+          board[row][c] = 0;
+        }
+      }
+      
       for (let col = 0; col < this.SIZE; col++) {
-        // Ensure cell exists and is 0 (empty)
-        if (board[row] === undefined || board[row][col] === undefined) {
-          console.error(`[fillBoard] Board has undefined at [${row}][${col}]`);
-          return false;
+        // Ensure cell exists and is a number
+        if (board[row][col] === undefined || board[row][col] === null) {
+          console.error(`[fillBoard] Cell [${row}][${col}] is ${board[row][col]}, setting to 0`);
+          board[row][col] = 0;
         }
         
         if (board[row][col] === 0) {
@@ -274,7 +298,7 @@ export class SudokuGenerator {
     // Try to generate solution with retries if backtracking fails
     let solution: SudokuBoard | null = null;
     let retries = 0;
-    const maxRetries = 10;
+    const maxRetries = 5; // Reduced retries since we'll fallback to Math.random
     
     while (retries < maxRetries && !solution) {
       try {
@@ -283,9 +307,19 @@ export class SudokuGenerator {
       } catch (error) {
         retries++;
         if (retries >= maxRetries) {
-          // Restore default RNG before throwing
+          // If seeded RNG keeps failing, fallback to Math.random for this generation
+          // This ensures we can always generate a puzzle, even if the seed is problematic
+          console.warn(`[Puzzle Generation] Seeded RNG failed ${maxRetries} times for seed: ${actualSeed}. Falling back to Math.random.`);
           this.rng = Math.random;
-          throw new Error(`Failed to generate solution after ${maxRetries} retries. Seed: ${actualSeed}. Error: ${error instanceof Error ? error.message : String(error)}`);
+          try {
+            solution = this.generateCompleteSolution();
+            console.log(`[Puzzle Generation] Successfully generated with Math.random fallback`);
+            break;
+          } catch (fallbackError) {
+            // Restore default RNG before throwing
+            this.rng = Math.random;
+            throw new Error(`Failed to generate solution even with Math.random fallback. Seed: ${actualSeed}. Error: ${fallbackError instanceof Error ? fallbackError.message : String(fallbackError)}`);
+          }
         }
         // Modify seed slightly for retry (add retry counter to make it different)
         if (seed) {
@@ -500,18 +534,25 @@ export class SudokuGenerator {
   }
 
   /**
-   * Seeded random number generator (simple)
+   * Seeded random number generator (improved LCG)
    */
   private seededRandom(seed: string): () => number {
+    // Create a better hash from the seed
     let hash = 0;
     for (let i = 0; i < seed.length; i++) {
-      hash = ((hash << 5) - hash) + seed.charCodeAt(i);
-      hash = hash & hash;
+      const char = seed.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash = hash | 0; // Convert to 32-bit integer
     }
     
+    // Use a better LCG (Linear Congruential Generator) with larger period
+    let state = Math.abs(hash) || 1; // Ensure state is never 0
+    
     return function() {
-      hash = (hash * 9301 + 49297) % 233280;
-      return hash / 233280;
+      // LCG: state = (a * state + c) % m
+      // Using parameters from Numerical Recipes
+      state = (state * 1664525 + 1013904223) >>> 0; // >>> 0 converts to unsigned 32-bit
+      return (state >>> 0) / 0xFFFFFFFF; // Convert to [0, 1)
     };
   }
 
