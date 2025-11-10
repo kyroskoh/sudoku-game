@@ -32,10 +32,13 @@ export const CasualGame: React.FC = () => {
   // Show name entry modal when puzzle is completed
   useEffect(() => {
     if (isComplete && !completionAcknowledged) {
-      // Only show name entry if no name is stored yet
       const storedName = getStoredName();
       if (!storedName) {
+        // Show name entry modal if no name is stored
         setShowNameEntry(true);
+      } else {
+        // If name already exists, immediately acknowledge completion to show modal
+        setCompletionAcknowledged(true);
       }
     }
   }, [isComplete, completionAcknowledged]);

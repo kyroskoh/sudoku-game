@@ -34,7 +34,11 @@ export const ChallengeGame: React.FC = () => {
     if (isComplete && !completionAcknowledged) {
       const storedName = getStoredName();
       if (!storedName) {
+        // Show name entry modal if no name is stored
         setShowNameEntry(true);
+      } else {
+        // If name already exists, immediately acknowledge completion to show modal
+        setCompletionAcknowledged(true);
       }
     }
   }, [isComplete, completionAcknowledged]);
