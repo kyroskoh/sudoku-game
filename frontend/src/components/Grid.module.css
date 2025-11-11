@@ -235,28 +235,76 @@
 }
 
 .cell.duplicate {
-  background-color: rgba(244, 67, 54, 0.1);
+  background-color: rgba(244, 67, 54, 0.15);
+  border: 3px dashed var(--duplicate-border-color, var(--error-color)) !important;
+  box-shadow: inset 0 0 0 1px var(--duplicate-border-color, rgba(244, 67, 54, 0.3));
 }
 
-/* Colorblind-friendly duplicate styling */
+/* Theme-specific duplicate styling for normal themes */
+[data-theme="classic"] .cell.duplicate {
+  border-color: #f44336 !important;
+  box-shadow: inset 0 0 0 1px rgba(244, 67, 54, 0.4);
+}
+
+[data-theme="dark"] .cell.duplicate {
+  border-color: #ef5350 !important;
+  box-shadow: inset 0 0 0 1px rgba(239, 83, 80, 0.5);
+}
+
+[data-theme="ocean"] .cell.duplicate {
+  border-color: #e53935 !important;
+  box-shadow: inset 0 0 0 1px rgba(229, 57, 53, 0.4);
+}
+
+[data-theme="forest"] .cell.duplicate {
+  border-color: #d32f2f !important;
+  box-shadow: inset 0 0 0 1px rgba(211, 47, 47, 0.4);
+}
+
+[data-theme="sunset"] .cell.duplicate {
+  border-color: #d84315 !important;
+  box-shadow: inset 0 0 0 1px rgba(216, 67, 21, 0.4);
+}
+
+[data-theme="midnight"] .cell.duplicate {
+  border-color: #ef5350 !important;
+  box-shadow: inset 0 0 0 1px rgba(239, 83, 80, 0.5);
+}
+
+[data-theme="lavender"] .cell.duplicate {
+  border-color: #c2185b !important;
+  box-shadow: inset 0 0 0 1px rgba(194, 24, 91, 0.4);
+}
+
+[data-theme="autumn"] .cell.duplicate {
+  border-color: #d84315 !important;
+  box-shadow: inset 0 0 0 1px rgba(216, 67, 21, 0.4);
+}
+
+/* Colorblind-friendly duplicate styling - use orange for better visibility */
 [data-theme="colorblind-blue"] .cell.duplicate,
 [data-theme="colorblind-yellow"] .cell.duplicate,
 [data-theme="colorblind-dark-blue"] .cell.duplicate,
 [data-theme="colorblind-dark-yellow"] .cell.duplicate {
-  background-color: rgba(255, 102, 0, 0.15);
-  border: 1px dashed var(--error-color);
+  background-color: rgba(255, 102, 0, 0.2);
+  border: 3px dashed #ff6600 !important;
+  box-shadow: inset 0 0 0 1px rgba(255, 102, 0, 0.5);
 }
 
+/* High contrast themes - use thick black dashed border */
 [data-theme="colorblind-high-contrast"] .cell.duplicate,
 [data-theme="colorblind-monochrome"] .cell.duplicate,
 [data-theme="colorblind-dark-monochrome"] .cell.duplicate {
-  background-color: rgba(0, 0, 0, 0.1);
-  border: 2px dashed var(--error-color);
+  background-color: rgba(0, 0, 0, 0.15);
+  border: 4px dashed #000000 !important;
+  box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.3);
 }
 
+/* Sepia theme - use darker brown */
 [data-theme="colorblind-sepia"] .cell.duplicate {
-  background-color: rgba(141, 110, 99, 0.15);
-  border: 1px dashed var(--error-color);
+  background-color: rgba(141, 110, 99, 0.2);
+  border: 3px dashed #6d4c41 !important;
+  box-shadow: inset 0 0 0 1px rgba(109, 76, 65, 0.5);
 }
 
 .cell.correctRow,
