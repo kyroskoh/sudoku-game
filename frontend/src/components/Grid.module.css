@@ -112,7 +112,35 @@
 }
 
 .cell.highlighted {
-  background-color: var(--highlight-color);
+  background-color: var(--highlight-color) !important;
+  border-left: 1px solid rgba(33, 150, 243, 0.3);
+  border-right: 1px solid rgba(33, 150, 243, 0.3);
+  border-top: 1px solid rgba(33, 150, 243, 0.3);
+  border-bottom: 1px solid rgba(33, 150, 243, 0.3);
+}
+
+/* Enhanced highlighting for different themes */
+[data-theme="dark"] .cell.highlighted {
+  border-color: rgba(66, 165, 245, 0.4);
+}
+
+[data-theme="ocean"] .cell.highlighted {
+  border-color: rgba(0, 172, 193, 0.4);
+}
+
+[data-theme="forest"] .cell.highlighted {
+  border-color: rgba(124, 179, 66, 0.4);
+}
+
+[data-theme="colorblind-blue"] .cell.highlighted,
+[data-theme="colorblind-yellow"] .cell.highlighted {
+  border-color: rgba(0, 102, 204, 0.5);
+}
+
+[data-theme="colorblind-high-contrast"] .cell.highlighted,
+[data-theme="colorblind-monochrome"] .cell.highlighted {
+  border-color: rgba(0, 0, 0, 0.4);
+  border-width: 2px;
 }
 
 .cell.error {
