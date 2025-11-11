@@ -11,7 +11,7 @@
   --text-secondary: #666666;
   --border-color: #cccccc;
   --highlight-color: #e3f2fd;
-  --selected-color: #bbdefb;
+  --selected-color: #90caf9; /* More vibrant blue for better visibility */
   --given-color: #1976d2;
   --user-color: #333333;
   --error-color: #f44336;
@@ -29,7 +29,7 @@
   --text-secondary: #b0b0b0;
   --border-color: #555555;
   --highlight-color: #263238;
-  --selected-color: #37474f;
+  --selected-color: #546e7a; /* Lighter gray for better contrast in dark theme */
   --given-color: #64b5f6;
   --user-color: #e0e0e0;
   --error-color: #ef5350;
@@ -47,7 +47,7 @@
   --text-secondary: #00695c;
   --border-color: #4db6ac;
   --highlight-color: #b2ebf2;
-  --selected-color: #80deea;
+  --selected-color: #4dd0e1; /* More vibrant cyan for ocean theme */
   --given-color: #00796b;
   --user-color: #004d40;
   --error-color: #d32f2f;
@@ -65,7 +65,7 @@
   --text-secondary: #558b2f;
   --border-color: #9ccc65;
   --highlight-color: #e8f5e9;
-  --selected-color: #c8e6c9;
+  --selected-color: #a5d6a7; /* More vibrant green for forest theme */
   --given-color: #558b2f;
   --user-color: #33691e;
   --error-color: #d32f2f;
@@ -85,7 +85,7 @@
   --text-secondary: #333333;
   --border-color: #666666;
   --highlight-color: #e6f3ff;
-  --selected-color: #b3d9ff;
+  --selected-color: #66b3ff; /* More vibrant blue for colorblind-blue theme */
   --given-color: #0066cc;
   --user-color: #000000;
   /* Use orange for errors (distinguishable from blue) */
@@ -107,7 +107,7 @@
   --text-secondary: #1a1a1a;
   --border-color: #000000;
   --highlight-color: #e0e0e0;
-  --selected-color: #cccccc;
+  --selected-color: #b0b0b0; /* More visible gray for high contrast theme */
   --given-color: #000000;
   --user-color: #000000;
   /* Use dark gray/black patterns for errors */
@@ -129,7 +129,7 @@
   --text-secondary: #1a1a80;
   --border-color: #4a4a80;
   --highlight-color: #e6f0ff;
-  --selected-color: #b3d9ff;
+  --selected-color: #66b3ff; /* More vibrant blue for colorblind-yellow theme */
   --given-color: #0000cc;
   --user-color: #000080;
   /* Use yellow/orange for errors */
@@ -151,7 +151,7 @@
   --text-secondary: #333333;
   --border-color: #666666;
   --highlight-color: #f0f0f0;
-  --selected-color: #d8d8d8;
+  --selected-color: #b8b8b8; /* More visible gray for monochrome theme */
   --given-color: #000000;
   --user-color: #000000;
   /* Use dark gray for errors */

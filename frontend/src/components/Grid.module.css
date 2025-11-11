@@ -65,9 +65,12 @@
 
 .cell.selected {
   background-color: var(--selected-color) !important;
-  outline: 3px solid var(--button-primary);
-  outline-offset: -3px;
+  outline: 4px solid var(--button-primary);
+  outline-offset: -4px;
+  box-shadow: 0 0 8px rgba(33, 150, 243, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.3);
   z-index: 1;
+  transform: scale(1.02);
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
 }
 
 /* Ensure selection is visible even when cell is in correct state */
@@ -75,9 +78,10 @@
 .cell.selected.correctCol,
 .cell.selected.correctBox {
   background-color: var(--selected-color) !important;
-  outline: 4px solid var(--button-primary);
-  outline-offset: -4px;
-  box-shadow: 0 0 0 2px var(--button-primary), inset 0 0 0 2px rgba(76, 175, 80, 0.4);
+  outline: 5px solid var(--button-primary);
+  outline-offset: -5px;
+  box-shadow: 0 0 12px rgba(33, 150, 243, 0.7), 0 0 0 2px var(--button-primary), inset 0 0 0 2px rgba(76, 175, 80, 0.4);
+  transform: scale(1.03);
 }
 
 /* Colorblind themes - selected + correct state */
@@ -88,9 +92,10 @@
 [data-theme="colorblind-yellow"] .cell.selected.correctCol,
 [data-theme="colorblind-yellow"] .cell.selected.correctBox {
   background-color: var(--selected-color) !important;
-  outline: 4px solid var(--button-primary);
-  outline-offset: -4px;
-  box-shadow: 0 0 0 2px var(--button-primary), inset 0 0 0 2px rgba(102, 51, 204, 0.4);
+  outline: 5px solid var(--button-primary);
+  outline-offset: -5px;
+  box-shadow: 0 0 12px rgba(0, 102, 204, 0.7), 0 0 0 2px var(--button-primary), inset 0 0 0 2px rgba(102, 51, 204, 0.4);
+  transform: scale(1.03);
 }
 
 [data-theme="colorblind-high-contrast"] .cell.selected.correctRow,
@@ -100,9 +105,10 @@
 [data-theme="colorblind-monochrome"] .cell.selected.correctCol,
 [data-theme="colorblind-monochrome"] .cell.selected.correctBox {
   background-color: var(--selected-color) !important;
-  outline: 5px solid var(--button-primary);
-  outline-offset: -5px;
-  box-shadow: 0 0 0 3px var(--button-primary), inset 0 0 0 2px rgba(0, 0, 0, 0.3);
+  outline: 6px solid var(--button-primary);
+  outline-offset: -6px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.8), 0 0 0 3px var(--button-primary), inset 0 0 0 2px rgba(0, 0, 0, 0.3);
+  transform: scale(1.04);
 }
 
 .cell.highlighted {
