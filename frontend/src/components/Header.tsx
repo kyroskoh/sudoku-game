@@ -16,7 +16,7 @@ export const Header: React.FC = () => {
   const [deviceId, setDeviceId] = useState('');
   const [displayName, setDisplayName] = useState('');
 
-  const themes: Theme[] = ['classic', 'dark', 'ocean', 'forest'];
+  const themes: Theme[] = ['classic', 'dark', 'ocean', 'forest', 'colorblind'];
 
   // Check for ?showid=true in URL
   useEffect(() => {

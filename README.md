@@ -18,7 +18,7 @@ A modern, feature-rich Sudoku game built with React, TypeScript, Node.js, and SQ
 - 💡 **Smart Hints**: Get help when you're stuck
 - ⏱️ **Timer & Stats**: Track your progress and best times
 - ✅ **Visual Feedback**: Green flash animation when rows, columns, or boxes are correctly completed (validated against solution)
-- 🎨 **Multiple Themes**: Classic, Dark, Ocean, Forest
+- 🎨 **Multiple Themes**: Classic, Dark, Ocean, Forest, Colorblind-friendly
 - 📱 **Responsive Design**: Play on desktop, tablet, or mobile
 - 💾 **Auto-Save**: Progress is automatically saved locally
 - 🌐 **Offline Support**: Play without an internet connection
@@ -177,11 +177,12 @@ sudoku-game/
 
 ## 🎨 Themes
 
-Sudoku Mastery includes 4 beautiful themes:
+Sudoku Mastery includes 5 beautiful themes:
 - **Classic**: Traditional light theme
 - **Dark**: Easy on the eyes for night play
 - **Ocean**: Calming blue-green tones
 - **Forest**: Natural green palette
+- **Colorblind**: High-contrast, colorblind-friendly theme with blue-orange-purple palette
 
 Click the "🎨 Theme" button in the header to cycle through themes.
 

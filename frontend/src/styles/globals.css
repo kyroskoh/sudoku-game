@@ -75,6 +75,28 @@
   --note-color: #9ccc65;
 }
 
+[data-theme="colorblind"] {
+  /* High contrast colorblind-friendly theme */
+  /* Uses blue-yellow palette and high contrast for maximum accessibility */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f0f0f0;
+  --bg-tertiary: #e0e0e0;
+  --text-primary: #000000;
+  --text-secondary: #333333;
+  --border-color: #666666;
+  --highlight-color: #e6f3ff;
+  --selected-color: #b3d9ff;
+  --given-color: #0066cc;
+  --user-color: #000000;
+  /* Use orange/yellow for errors (distinguishable from blue) */
+  --error-color: #ff6600;
+  /* Use purple/violet for success (distinguishable from blue) */
+  --success-color: #6633cc;
+  --button-primary: #0066cc;
+  --button-hover: #0052a3;
+  --note-color: #666666;
+}
+
 * {
   margin: 0;
   padding: 0;

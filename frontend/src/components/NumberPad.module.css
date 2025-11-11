@@ -45,7 +45,8 @@
 }
 
 .eraseButton:hover:not(:disabled) {
-  background-color: #d32f2f;
+  background-color: var(--error-color);
+  opacity: 0.9;
 }
 
 @media (max-width: 768px) {
