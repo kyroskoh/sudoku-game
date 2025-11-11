@@ -16,6 +16,7 @@ A modern, feature-rich Sudoku game built with React, TypeScript, Node.js, and SQ
 - ↶ **Undo/Redo**: Full history support for your moves (50-step history)
 - 💡 **Smart Hints**: Get help when you're stuck
 - ⏱️ **Timer & Stats**: Track your progress and best times
+- ✅ **Visual Feedback**: Green flash animation when rows, columns, or boxes are correctly completed
 - 🎨 **Multiple Themes**: Classic, Dark, Ocean, Forest
 - 📱 **Responsive Design**: Play on desktop, tablet, or mobile
 - 💾 **Auto-Save**: Progress is automatically saved locally
@@ -27,6 +28,7 @@ A modern, feature-rich Sudoku game built with React, TypeScript, Node.js, and SQ
 - 🔐 **Secure Puzzles**: Salted seed generation prevents cheating
 - 🎯 **Difficulty Selection**: Choose from Easy, Medium, Hard, Expert, Extreme
 - 🚀 **Ready to Start**: Blur overlay with "I'm Ready" button before timer starts
+- ⏸️ **Pause/Resume**: Pause the game anytime with timer freeze
 
 ### ♿ Accessibility
 - Keyboard-first navigation
@@ -157,9 +159,12 @@ sudoku-game/
    - Press Backspace or ✕ to erase
 4. **Use Controls**:
    - Undo/Redo your moves
-   - Pause the game
+   - Pause the game (timer freezes, no input allowed)
    - Track your time and mistakes
-5. **Complete the Puzzle**: Fill all cells correctly to win!
+5. **Visual Feedback**: 
+   - Rows, columns, and 3x3 boxes flash green when correctly completed
+   - Green highlight persists until the line/box becomes incorrect
+6. **Complete the Puzzle**: Fill all cells correctly to win!
 
 ### Keyboard Shortcuts
 - **1-9**: Enter number (Pen mode) or toggle note (Pencil mode)
@@ -298,7 +303,8 @@ We're constantly working to improve Sudoku Mastery! Here are some planned featur
 ### 🎮 Gameplay Enhancements
 - **Advanced Solving Techniques**: Visual hints for advanced techniques (X-Wing, Swordfish, etc.)
 - **Auto-Fill Candidates**: Automatically fill in all possible candidates for empty cells
-- **Mistake Detection**: Real-time validation with visual feedback
+- ✅ **Real-time Validation**: Visual feedback when rows, columns, or boxes are correctly completed (implemented)
+- **Mistake Detection**: Real-time validation with visual feedback for incorrect entries
 - **Color Coding**: Color-code candidates for advanced solving strategies
 - **Multiple Solutions**: Support for puzzles with multiple valid solutions
 - **Custom Puzzles**: Allow users to create and share their own puzzles
@@ -329,7 +335,7 @@ We're constantly working to improve Sudoku Mastery! Here are some planned featur
 - **Heatmaps**: Visual representation of where you spend most time
 
 ### 🎨 UI/UX Improvements
-- **Animations**: Smooth transitions and animations for better feedback
+- ✅ **Animations**: Smooth transitions and animations for better feedback (implemented: green flash for correct lines/boxes)
 - **Sound Effects**: Optional sound effects for actions (cell fill, error, completion)
 - **Haptic Feedback**: Vibration feedback on mobile devices
 - **Custom Themes**: User-created themes and theme marketplace
