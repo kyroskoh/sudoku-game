@@ -10,7 +10,8 @@
   --text-primary: #333333;
   --text-secondary: #666666;
   --border-color: #cccccc;
-  --highlight-color: #c5e1fb; /* More vibrant blue for row/column highlighting */
+  --highlight-color: #90caf9; /* More vibrant blue for row/column highlighting - darker than bg */
+  --highlight-text-color: #000000; /* Inverted text color for better contrast */
   --selected-color: #90caf9; /* More vibrant blue for better visibility */
   --given-color: #1976d2;
   --user-color: #333333;
@@ -28,7 +29,8 @@
   --text-primary: #e0e0e0;
   --text-secondary: #b0b0b0;
   --border-color: #555555;
-  --highlight-color: #455a64; /* Lighter gray-blue for better visibility in dark theme */
+  --highlight-color: #546e7a; /* Lighter gray-blue for better visibility in dark theme */
+  --highlight-text-color: #ffffff; /* Light text for dark highlight */
   --selected-color: #546e7a; /* Lighter gray for better contrast in dark theme */
   --given-color: #64b5f6;
   --user-color: #e0e0e0;
@@ -46,7 +48,8 @@
   --text-primary: #004d40;
   --text-secondary: #00695c;
   --border-color: #4db6ac;
-  --highlight-color: #80deea; /* More vibrant cyan for ocean theme */
+  --highlight-color: #4dd0e1; /* More vibrant cyan for ocean theme - darker than bg */
+  --highlight-text-color: #000000; /* Dark text for light highlight */
   --selected-color: #4dd0e1; /* More vibrant cyan for ocean theme */
   --given-color: #00796b;
   --user-color: #004d40;
@@ -64,7 +67,8 @@
   --text-primary: #33691e;
   --text-secondary: #558b2f;
   --border-color: #9ccc65;
-  --highlight-color: #c8e6c9; /* More vibrant green for forest theme */
+  --highlight-color: #a5d6a7; /* More vibrant green for forest theme - darker than bg */
+  --highlight-text-color: #000000; /* Dark text for light highlight */
   --selected-color: #a5d6a7; /* More vibrant green for forest theme */
   --given-color: #558b2f;
   --user-color: #33691e;
@@ -84,7 +88,8 @@
   --text-primary: #000000;
   --text-secondary: #333333;
   --border-color: #666666;
-  --highlight-color: #b3d9ff; /* More vibrant blue for colorblind-blue theme */
+  --highlight-color: #66b3ff; /* More vibrant blue for colorblind-blue theme - darker */
+  --highlight-text-color: #000000; /* Dark text for light highlight */
   --selected-color: #66b3ff; /* More vibrant blue for colorblind-blue theme */
   --given-color: #0066cc;
   --user-color: #000000;
@@ -106,7 +111,8 @@
   --text-primary: #000000;
   --text-secondary: #1a1a1a;
   --border-color: #000000;
-  --highlight-color: #c0c0c0; /* More visible gray for high contrast theme */
+  --highlight-color: #808080; /* Darker gray for better contrast */
+  --highlight-text-color: #ffffff; /* Light text for dark highlight */
   --selected-color: #b0b0b0; /* More visible gray for high contrast theme */
   --given-color: #000000;
   --user-color: #000000;
@@ -128,7 +134,8 @@
   --text-primary: #000080;
   --text-secondary: #1a1a80;
   --border-color: #4a4a80;
-  --highlight-color: #b3d9ff; /* More vibrant blue for colorblind-yellow theme */
+  --highlight-color: #66b3ff; /* More vibrant blue for colorblind-yellow theme - darker */
+  --highlight-text-color: #000000; /* Dark text for light highlight */
   --selected-color: #66b3ff; /* More vibrant blue for colorblind-yellow theme */
   --given-color: #0000cc;
   --user-color: #000080;
@@ -150,7 +157,8 @@
   --text-primary: #000000;
   --text-secondary: #333333;
   --border-color: #666666;
-  --highlight-color: #d0d0d0; /* More visible gray for monochrome theme */
+  --highlight-color: #b8b8b8; /* Darker gray for better contrast */
+  --highlight-text-color: #000000; /* Dark text for light highlight */
   --selected-color: #b8b8b8; /* More visible gray for monochrome theme */
   --given-color: #000000;
   --user-color: #000000;
@@ -191,7 +199,8 @@
   --text-primary: #e0e1dd;
   --text-secondary: #c9c9c9;
   --border-color: #778da9;
-  --highlight-color: #1b263b;
+  --highlight-color: #415a77; /* Lighter blue-gray for better contrast */
+  --highlight-text-color: #ffffff; /* Light text for dark highlight */
   --selected-color: #415a77;
   --given-color: #90caf9;
   --user-color: #e0e1dd;
@@ -210,7 +219,8 @@
   --text-primary: #4a148c;
   --text-secondary: #6a1b9a;
   --border-color: #ba68c8;
-  --highlight-color: #e1bee7;
+  --highlight-color: #ce93d8; /* Darker purple for better contrast */
+  --highlight-text-color: #000000; /* Dark text for light highlight */
   --selected-color: #ce93d8;
   --given-color: #7b1fa2;
   --user-color: #4a148c;
@@ -229,7 +239,8 @@
   --text-primary: #5d4037;
   --text-secondary: #6d4c41;
   --border-color: #a1887f;
-  --highlight-color: #ffe0b2;
+  --highlight-color: #ffcc80; /* Darker orange for better contrast */
+  --highlight-text-color: #000000; /* Dark text for light highlight */
   --selected-color: #ffcc80;
   --given-color: #8d6e63;
   --user-color: #5d4037;
@@ -250,7 +261,8 @@
   --text-primary: #e0e0e0;
   --text-secondary: #b0b0b0;
   --border-color: #533483;
-  --highlight-color: #16213e;
+  --highlight-color: #0f3460; /* Darker blue for better contrast */
+  --highlight-text-color: #ffffff; /* Light text for dark highlight */
   --selected-color: #0f3460;
   --given-color: #66b3ff;
   --user-color: #e0e0e0;
@@ -272,7 +284,8 @@
   --text-primary: #ffff99;
   --text-secondary: #ffffcc;
   --border-color: #666633;
-  --highlight-color: #2d2d2d;
+  --highlight-color: #404040; /* Lighter gray for better contrast */
+  --highlight-text-color: #ffffff; /* Light text for dark highlight */
   --selected-color: #404040;
   --given-color: #66b3ff;
   --user-color: #ffff99;
@@ -294,7 +307,8 @@
   --text-primary: #e0e0e0;
   --text-secondary: #b0b0b0;
   --border-color: #666666;
-  --highlight-color: #2d2d2d;
+  --highlight-color: #404040; /* Lighter gray for better contrast */
+  --highlight-text-color: #ffffff; /* Light text for dark highlight */
   --selected-color: #404040;
   --given-color: #e0e0e0;
   --user-color: #e0e0e0;
@@ -316,7 +330,8 @@
   --text-primary: #3e2723;
   --text-secondary: #5d4037;
   --border-color: #8d6e63;
-  --highlight-color: #e8dcc6;
+  --highlight-color: #d4c4a8; /* Darker brown for better contrast */
+  --highlight-text-color: #000000; /* Dark text for light highlight */
   --selected-color: #d4c4a8;
   --given-color: #6d4c41;
   --user-color: #3e2723;
