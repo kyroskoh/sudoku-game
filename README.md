@@ -174,7 +174,7 @@ sudoku-game/
    - Rows, columns, and 3x3 boxes flash green when correctly completed
    - Validation checks against the actual solution (not just completeness)
    - Green highlight persists until the line/box becomes incorrect
-6. **Complete the Puzzle**: Fill all cells correctly to win!
+7. **Complete the Puzzle**: Fill all cells correctly to win!
 
 ### Keyboard Shortcuts
 - **1-9**: Enter number (Pen mode) or toggle note (Pencil mode)
