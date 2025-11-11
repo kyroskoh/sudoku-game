@@ -70,12 +70,18 @@ export const NameEntryModal: React.FC<NameEntryModalProps> = ({
       try {
         const queue = getSyncQueue();
         if (queue.length > 0) {
-          await api.syncAttempts(queue, undefined, deviceId);
-          console.log('✅ Attempts synced after name update');
+          console.log(`[NameEntry] Syncing ${queue.length} attempt(s) to update leaderboard...`);
+          const synced = await api.syncAttempts(queue, undefined, deviceId);
+          console.log('✅ Attempts synced after name update:', synced);
+          
+          // Wait a bit for leaderboard to update
+          await new Promise(resolve => setTimeout(resolve, 500));
+        } else {
+          console.warn('[NameEntry] No attempts in queue to sync');
         }
       } catch (syncError) {
-        console.error('Error syncing attempts:', syncError);
-        // Continue even if sync fails
+        console.error('[NameEntry] Error syncing attempts:', syncError);
+        // Continue even if sync fails - user can refresh leaderboard manually
       }
       
       onSubmit();

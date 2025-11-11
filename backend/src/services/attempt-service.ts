@@ -145,16 +145,26 @@ export class AttemptService {
               mistakes: attemptData.mistakes || 0,
               hintsUsed: attemptData.hintsUsed || 0,
               result: attemptData.result || 'in_progress'
+            },
+            include: {
+              puzzle: true // Include puzzle for leaderboard update
             }
           });
+          
+          // Update leaderboard if completed
+          if (attemptData.result === 'completed' && attemptData.timeMs) {
+            await this.updateLeaderboard(attempt);
+          }
         }
 
         results.push(attempt);
       } catch (error) {
-        console.error('Error syncing attempt:', error);
+        console.error('[Sync] Error syncing attempt:', error);
+        // Continue with other attempts even if one fails
       }
     }
 
+    console.log(`[Sync] Synced ${results.length} of ${attempts.length} attempts`);
     return results;
   }
 
@@ -165,32 +175,96 @@ export class AttemptService {
     // Track ALL modes now (casual, daily, challenge)
     // Only skip if attempt wasn't completed or has no time
     if (!attempt.timeMs || attempt.result !== 'completed') {
+      console.log('[Leaderboard] Skipping - attempt not completed or no time:', {
+        timeMs: attempt.timeMs,
+        result: attempt.result
+      });
       return;
     }
 
-    // Get displayName from device or user
-    let displayName: string | null = null;
-    if (attempt.deviceId) {
-      const device = await prisma.device.findUnique({
-        where: { id: attempt.deviceId }
-      }) as any;
-      displayName = device?.displayName || null;
-    } else if (attempt.userId) {
-      const user = await prisma.user.findUnique({
-        where: { id: attempt.userId }
-      }) as any;
-      displayName = user?.displayName || null;
-    }
+    try {
+      // Check if leaderboard entry already exists for this attempt
+      const existing = await prisma.leaderboard.findFirst({
+        where: {
+          puzzleId: attempt.puzzleId,
+          ...(attempt.deviceId ? { deviceId: attempt.deviceId } : {}),
+          ...(attempt.userId ? { userId: attempt.userId } : {})
+        }
+      });
 
-    await prisma.leaderboard.create({
-      data: {
+      if (existing) {
+        // Update existing entry if this time is better (faster)
+        if (attempt.timeMs < existing.timeMs) {
+          console.log('[Leaderboard] Updating existing entry with better time:', {
+            puzzleId: attempt.puzzleId,
+            oldTime: existing.timeMs,
+            newTime: attempt.timeMs
+          });
+          
+          // Get displayName from device or user
+          let displayName: string | null = null;
+          if (attempt.deviceId) {
+            const device = await prisma.device.findUnique({
+              where: { id: attempt.deviceId }
+            }) as any;
+            displayName = device?.displayName || null;
+          } else if (attempt.userId) {
+            const user = await prisma.user.findUnique({
+              where: { id: attempt.userId }
+            }) as any;
+            displayName = user?.displayName || null;
+          }
+
+          await prisma.leaderboard.update({
+            where: { id: existing.id },
+            data: {
+              displayName: displayName || null,
+              timeMs: attempt.timeMs
+            } as any
+          });
+        } else {
+          console.log('[Leaderboard] Existing entry has better time, skipping update');
+        }
+        return;
+      }
+
+      // Get displayName from device or user
+      let displayName: string | null = null;
+      if (attempt.deviceId) {
+        const device = await prisma.device.findUnique({
+          where: { id: attempt.deviceId }
+        }) as any;
+        displayName = device?.displayName || null;
+      } else if (attempt.userId) {
+        const user = await prisma.user.findUnique({
+          where: { id: attempt.userId }
+        }) as any;
+        displayName = user?.displayName || null;
+      }
+
+      console.log('[Leaderboard] Creating new entry:', {
         puzzleId: attempt.puzzleId,
-        userId: attempt.userId,
         deviceId: attempt.deviceId,
-        displayName: displayName || null,
+        userId: attempt.userId,
+        displayName,
         timeMs: attempt.timeMs
-      } as any
-    });
+      });
+
+      await prisma.leaderboard.create({
+        data: {
+          puzzleId: attempt.puzzleId,
+          userId: attempt.userId,
+          deviceId: attempt.deviceId,
+          displayName: displayName || null,
+          timeMs: attempt.timeMs
+        } as any
+      });
+
+      console.log('[Leaderboard] Entry created successfully');
+    } catch (error) {
+      console.error('[Leaderboard] Error updating leaderboard:', error);
+      throw error;
+    }
   }
 
   /**

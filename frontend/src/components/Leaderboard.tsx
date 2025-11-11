@@ -2,7 +2,7 @@
  * Leaderboard Component
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { api } from '../utils/api';
 import type { GameMode, Difficulty, LeaderboardEntry } from '../types';
 import styles from './Leaderboard.module.css';
@@ -24,11 +24,7 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    loadLeaderboard();
-  }, [mode, difficulty, puzzleId]);
-
-  const loadLeaderboard = async () => {
+  const loadLeaderboard = useCallback(async () => {
     setLoading(true);
     setError(null);
 
@@ -48,7 +44,20 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({
     } finally {
       setLoading(false);
     }
-  };
+  }, [mode, difficulty, puzzleId]);
+
+  useEffect(() => {
+    loadLeaderboard();
+  }, [loadLeaderboard]);
+
+  // Refresh leaderboard when window gains focus (in case user submitted from another tab)
+  useEffect(() => {
+    const handleFocus = () => {
+      loadLeaderboard();
+    };
+    window.addEventListener('focus', handleFocus);
+    return () => window.removeEventListener('focus', handleFocus);
+  }, [loadLeaderboard]);
 
   const formatTime = (timeMs: number): string => {
     const totalSeconds = Math.floor(timeMs / 1000);
@@ -66,7 +75,25 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({
 
   return (
     <div className={styles.leaderboard}>
-      <h2 className={styles.title}>🏆 Leaderboard</h2>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+        <h2 className={styles.title}>🏆 Leaderboard</h2>
+        <button 
+          onClick={loadLeaderboard}
+          disabled={loading}
+          style={{ 
+            padding: '0.5rem 1rem', 
+            backgroundColor: 'var(--button-primary)', 
+            color: 'white', 
+            border: 'none', 
+            borderRadius: '4px',
+            cursor: loading ? 'not-allowed' : 'pointer',
+            opacity: loading ? 0.6 : 1
+          }}
+          aria-label="Refresh leaderboard"
+        >
+          🔄 {loading ? 'Loading...' : 'Refresh'}
+        </button>
+      </div>
 
       <div className={styles.filters}>
         <div className={styles.filterGroup}>
