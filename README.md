@@ -35,6 +35,7 @@ A modern, feature-rich Sudoku game built with React, TypeScript, Node.js, and SQ
 - Keyboard-first navigation
 - ARIA labels and roles
 - High-contrast themes
+- **Colorblind-friendly theme**: Designed for users with color vision deficiencies
 - Screen reader friendly
 
 ## 🏗️ Architecture
