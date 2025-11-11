@@ -3,7 +3,7 @@
  */
 
 export type Difficulty = 'easy' | 'medium' | 'hard' | 'expert' | 'extreme';
-export type GameMode = 'casual' | 'daily' | 'challenge';
+export type GameMode = 'casual' | 'daily' | 'challenge' | 'speed';
 export type InputMode = 'pen' | 'pencil';
 export type Theme = 'classic' | 'dark' | 'ocean' | 'forest';
 

@@ -14,19 +14,29 @@ export const Home: React.FC = () => {
       icon: '🎮',
       title: 'Casual Mode',
       description: 'Practice with progressive difficulty levels. Perfect for honing your skills!',
-      path: '/casual'
+      path: '/casual',
+      comingSoon: false
     },
     {
       icon: '📅',
       title: 'Daily Puzzle',
       description: 'One puzzle per day. Build your streak and compete on the leaderboard!',
-      path: '/daily'
+      path: '/daily',
+      comingSoon: false
     },
     {
       icon: '🏆',
       title: 'Challenge Mode',
       description: 'Test your limits with timed puzzles and special constraints!',
-      path: '/challenge'
+      path: '/challenge',
+      comingSoon: false
+    },
+    {
+      icon: '⚡',
+      title: 'Speed Mode',
+      description: 'Race against the clock with time limits and bonus points. Compete for the fastest times!',
+      path: '/speed',
+      comingSoon: true
     }
   ];
 
@@ -41,11 +51,14 @@ export const Home: React.FC = () => {
         {modes.map((mode) => (
           <div
             key={mode.path}
-            className={styles.modeCard}
-            onClick={() => navigate(mode.path)}
+            className={`${styles.modeCard} ${mode.comingSoon ? styles.comingSoon : ''}`}
+            onClick={() => !mode.comingSoon && navigate(mode.path)}
           >
             <div className={styles.modeIcon}>{mode.icon}</div>
-            <h2 className={styles.modeTitle}>{mode.title}</h2>
+            <h2 className={styles.modeTitle}>
+              {mode.title}
+              {mode.comingSoon && <span className={styles.comingSoonBadge}>Coming Soon</span>}
+            </h2>
             <p className={styles.modeDescription}>{mode.description}</p>
           </div>
         ))}

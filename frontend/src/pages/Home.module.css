@@ -37,12 +37,49 @@
   transition: transform 0.2s, box-shadow 0.2s;
   cursor: pointer;
   border: 2px solid transparent;
+  position: relative;
 }
 
-.modeCard:hover {
+.modeCard:hover:not(.comingSoon) {
   transform: translateY(-4px);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
   border-color: var(--button-primary);
+}
+
+.modeCard.comingSoon {
+  cursor: not-allowed;
+  opacity: 0.7;
+  position: relative;
+}
+
+.modeCard.comingSoon:hover {
+  transform: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.comingSoonBadge {
+  display: inline-block;
+  margin-left: 0.5rem;
+  padding: 0.25rem 0.75rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
 }
 
 .modeIcon {

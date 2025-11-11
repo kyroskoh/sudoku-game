@@ -88,6 +88,23 @@
   background-color: rgba(255, 255, 255, 0.3);
 }
 
+.navLink.comingSoon {
+  opacity: 0.6;
+  cursor: not-allowed;
+  position: relative;
+}
+
+.navLink.comingSoon:hover {
+  background-color: transparent;
+}
+
+.navLink.comingSoon::after {
+  content: '🔜';
+  font-size: 0.7rem;
+  margin-left: 0.25rem;
+  opacity: 0.8;
+}
+
 .themeButton {
   padding: 0.5rem 1rem;
   background-color: rgba(255, 255, 255, 0.2);

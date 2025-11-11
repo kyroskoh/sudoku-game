@@ -82,6 +82,12 @@ export const Header: React.FC = () => {
           >
             Challenge
           </Link>
+          <span
+            className={`${styles.navLink} ${styles.comingSoon}`}
+            title="Speed Mode - Coming Soon"
+          >
+            ⚡ Speed
+          </span>
           <Link
             to="/leaderboard"
             className={`${styles.navLink} ${isActive('/leaderboard') ? styles.active : ''}`}
