@@ -170,7 +170,7 @@ sudoku-game/
    - Undo/Redo your moves
    - Pause the game (timer freezes, no input allowed)
    - Track your time and mistakes
-5. **Visual Feedback**: 
+6. **Visual Feedback**: 
    - Rows, columns, and 3x3 boxes flash green when correctly completed
    - Validation checks against the actual solution (not just completeness)
    - Green highlight persists until the line/box becomes incorrect
