@@ -120,95 +120,161 @@ export const Grid: React.FC = () => {
       return;
     }
 
-    const newCorrectRows = new Set<number>();
-    const newCorrectCols = new Set<number>();
-    const newCorrectBoxes = new Set<string>();
-
-    // Check rows
-    for (let row = 0; row < 9; row++) {
-      const seen = new Set<number>();
-      let isComplete = true;
-      for (let col = 0; col < 9; col++) {
-        const value = board[row][col];
-        if (value === 0) {
-          isComplete = false;
-          break;
+    // Fetch solution if not already available
+    const checkCorrectness = async () => {
+      let solutionData = solution;
+      
+      // Fetch solution if not already loaded
+      if (!solutionData && puzzle.id) {
+        try {
+          const response = await fetch(`/api/puzzles/${puzzle.id}?showsolution=true`);
+          if (response.ok) {
+            const data = await response.json();
+            solutionData = typeof data.solution === 'string' 
+              ? JSON.parse(data.solution) 
+              : data.solution;
+            setSolution(solutionData);
+          } else {
+            // If solution fetch fails, fall back to validation without solution
+            solutionData = null;
+          }
+        } catch (error) {
+          console.error('Error fetching solution for validation:', error);
+          solutionData = null;
         }
-        if (value < 1 || value > 9 || seen.has(value)) {
-          isComplete = false;
-          break;
-        }
-        seen.add(value);
       }
-      if (isComplete && seen.size === 9) {
-        newCorrectRows.add(row);
-      }
-    }
 
-    // Check columns
-    for (let col = 0; col < 9; col++) {
-      const seen = new Set<number>();
-      let isComplete = true;
+      const newCorrectRows = new Set<number>();
+      const newCorrectCols = new Set<number>();
+      const newCorrectBoxes = new Set<string>();
+
+      // If we have solution, validate against it; otherwise just check completeness/uniqueness
+      const hasSolution = solutionData && Array.isArray(solutionData) && solutionData.length === 9;
+
+      // Check rows
       for (let row = 0; row < 9; row++) {
-        const value = board[row][col];
-        if (value === 0) {
-          isComplete = false;
-          break;
-        }
-        if (seen.has(value)) {
-          isComplete = false;
-          break;
-        }
-        seen.add(value);
-      }
-      if (isComplete && seen.size === 9) {
-        newCorrectCols.add(col);
-      }
-    }
-
-    // Check 3x3 boxes
-    for (let boxRow = 0; boxRow < 9; boxRow += 3) {
-      for (let boxCol = 0; boxCol < 9; boxCol += 3) {
         const seen = new Set<number>();
         let isComplete = true;
-        for (let i = 0; i < 3; i++) {
-          for (let j = 0; j < 3; j++) {
-            const value = board[boxRow + i][boxCol + j];
-            if (value === 0) {
-              isComplete = false;
-              break;
-            }
-            if (seen.has(value)) {
-              isComplete = false;
-              break;
-            }
-            seen.add(value);
+        let matchesSolution = true;
+        
+        for (let col = 0; col < 9; col++) {
+          const value = board[row][col];
+          if (value === 0) {
+            isComplete = false;
+            matchesSolution = false;
+            break;
           }
-          if (!isComplete) break;
+          if (value < 1 || value > 9 || seen.has(value)) {
+            isComplete = false;
+            matchesSolution = false;
+            break;
+          }
+          seen.add(value);
+          
+          // Check against solution if available
+          if (hasSolution && solutionData && solutionData[row][col] !== value) {
+            matchesSolution = false;
+          }
         }
-        if (isComplete && seen.size === 9) {
-          newCorrectBoxes.add(`${boxRow}-${boxCol}`);
+        
+        // Only mark as correct if complete AND matches solution (if available)
+        if (isComplete && seen.size === 9 && (!hasSolution || matchesSolution)) {
+          newCorrectRows.add(row);
         }
       }
-    }
 
-    // Only update if there are changes to trigger flash animation
-    const rowsChanged = JSON.stringify(Array.from(newCorrectRows).sort()) !== 
-                       JSON.stringify(Array.from(prevCorrectRowsRef.current).sort());
-    const colsChanged = JSON.stringify(Array.from(newCorrectCols).sort()) !== 
-                       JSON.stringify(Array.from(prevCorrectColsRef.current).sort());
-    const boxesChanged = JSON.stringify(Array.from(newCorrectBoxes).sort()) !== 
-                        JSON.stringify(Array.from(prevCorrectBoxesRef.current).sort());
+      // Check columns
+      for (let col = 0; col < 9; col++) {
+        const seen = new Set<number>();
+        let isComplete = true;
+        let matchesSolution = true;
+        
+        for (let row = 0; row < 9; row++) {
+          const value = board[row][col];
+          if (value === 0) {
+            isComplete = false;
+            matchesSolution = false;
+            break;
+          }
+          if (seen.has(value)) {
+            isComplete = false;
+            matchesSolution = false;
+            break;
+          }
+          seen.add(value);
+          
+          // Check against solution if available
+          if (hasSolution && solutionData && solutionData[row][col] !== value) {
+            matchesSolution = false;
+          }
+        }
+        
+        // Only mark as correct if complete AND matches solution (if available)
+        if (isComplete && seen.size === 9 && (!hasSolution || matchesSolution)) {
+          newCorrectCols.add(col);
+        }
+      }
 
-    if (rowsChanged || colsChanged || boxesChanged) {
-      setCorrectRows(newCorrectRows);
-      setCorrectCols(newCorrectCols);
-      setCorrectBoxes(newCorrectBoxes);
-      prevCorrectRowsRef.current = newCorrectRows;
-      prevCorrectColsRef.current = newCorrectCols;
-      prevCorrectBoxesRef.current = newCorrectBoxes;
-    }
-  }, [board, puzzle, hasStarted]);
+      // Check 3x3 boxes
+      for (let boxRow = 0; boxRow < 9; boxRow += 3) {
+        for (let boxCol = 0; boxCol < 9; boxCol += 3) {
+          const seen = new Set<number>();
+          let isComplete = true;
+          let matchesSolution = true;
+          
+          for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+              const row = boxRow + i;
+              const col = boxCol + j;
+              const value = board[row][col];
+              
+              if (value === 0) {
+                isComplete = false;
+                matchesSolution = false;
+                break;
+              }
+              if (seen.has(value)) {
+                isComplete = false;
+                matchesSolution = false;
+                break;
+              }
+              seen.add(value);
+              
+              // Check against solution if available
+              if (hasSolution && solutionData && solutionData[row][col] !== value) {
+                matchesSolution = false;
+              }
+            }
+            if (!isComplete) break;
+          }
+          
+      // Only mark as correct if complete AND matches solution (if available)
+      if (isComplete && seen.size === 9 && (!hasSolution || matchesSolution)) {
+        newCorrectBoxes.add(`${boxRow}-${boxCol}`);
+      }
+        }
+      }
+
+      // Only update if there are changes to trigger flash animation
+      const rowsChanged = JSON.stringify(Array.from(newCorrectRows).sort()) !== 
+                         JSON.stringify(Array.from(prevCorrectRowsRef.current).sort());
+      const colsChanged = JSON.stringify(Array.from(newCorrectCols).sort()) !== 
+                         JSON.stringify(Array.from(prevCorrectColsRef.current).sort());
+      const boxesChanged = JSON.stringify(Array.from(newCorrectBoxes).sort()) !== 
+                          JSON.stringify(Array.from(prevCorrectBoxesRef.current).sort());
+
+      if (rowsChanged || colsChanged || boxesChanged) {
+        setCorrectRows(newCorrectRows);
+        setCorrectCols(newCorrectCols);
+        setCorrectBoxes(newCorrectBoxes);
+        prevCorrectRowsRef.current = newCorrectRows;
+        prevCorrectColsRef.current = newCorrectCols;
+        prevCorrectBoxesRef.current = newCorrectBoxes;
+      }
+    };
+
+    checkCorrectness();
+  }, [board, puzzle, hasStarted, solution]);
 
   // Validate the solution
   const checkSolution = (currentBoard: number[][]): boolean => {

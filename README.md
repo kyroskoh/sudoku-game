@@ -16,7 +16,7 @@ A modern, feature-rich Sudoku game built with React, TypeScript, Node.js, and SQ
 - ↶ **Undo/Redo**: Full history support for your moves (50-step history)
 - 💡 **Smart Hints**: Get help when you're stuck
 - ⏱️ **Timer & Stats**: Track your progress and best times
-- ✅ **Visual Feedback**: Green flash animation when rows, columns, or boxes are correctly completed
+- ✅ **Visual Feedback**: Green flash animation when rows, columns, or boxes are correctly completed (validated against solution)
 - 🎨 **Multiple Themes**: Classic, Dark, Ocean, Forest
 - 📱 **Responsive Design**: Play on desktop, tablet, or mobile
 - 💾 **Auto-Save**: Progress is automatically saved locally
@@ -163,6 +163,7 @@ sudoku-game/
    - Track your time and mistakes
 5. **Visual Feedback**: 
    - Rows, columns, and 3x3 boxes flash green when correctly completed
+   - Validation checks against the actual solution (not just completeness)
    - Green highlight persists until the line/box becomes incorrect
 6. **Complete the Puzzle**: Fill all cells correctly to win!
 
