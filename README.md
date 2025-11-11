@@ -151,7 +151,7 @@ sudoku-game/
 
 ## 🎮 How to Play
 
-1. **Select a Game Mode**: Choose from Casual, Daily, or Challenge
+1. **Select a Game Mode**: Choose from Casual, Daily, Challenge, or Speed (coming soon)
 2. **Pick Your Difficulty**: Easy, Medium, Hard, Expert, or Extreme
 3. **Start Playing**: 
    - Click a cell to select it
@@ -441,6 +441,7 @@ We welcome contributions! If you'd like to help implement any of these features 
 
 ### Priority Features
 If you're looking for a good place to start, these features are high priority:
+- ⚡ **Speed Mode**: Time-attack mode with competitive leaderboards (high priority)
 - ✅ Unit tests for core game logic
 - ✅ Enhanced hint system with contextual suggestions
 - ✅ Achievement system
