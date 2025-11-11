@@ -24,6 +24,12 @@
   user-select: none;
 }
 
+.grid.paused {
+  pointer-events: none;
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
 .cell {
   aspect-ratio: 1;
   display: flex;

@@ -13,11 +13,13 @@ export const NumberPad: React.FC = () => {
     toggleNote,
     clearCell,
     inputMode,
-    puzzle
+    puzzle,
+    isPaused,
+    hasStarted
   } = useGameStore();
 
   const handleNumberClick = (num: number) => {
-    if (!selectedCell) return;
+    if (!selectedCell || isPaused || !hasStarted) return;
 
     const { row, col } = selectedCell;
 
@@ -29,12 +31,14 @@ export const NumberPad: React.FC = () => {
   };
 
   const handleEraseClick = () => {
-    if (!selectedCell) return;
+    if (!selectedCell || isPaused || !hasStarted) return;
     const { row, col } = selectedCell;
     clearCell(row, col);
   };
 
   const isDisabled = !selectedCell || 
+    isPaused ||
+    !hasStarted ||
     (!!puzzle && !!selectedCell && puzzle.givens[selectedCell.row][selectedCell.col] !== 0);
 
   return (

@@ -78,7 +78,8 @@ export const Controls: React.FC = () => {
       <div style={{ display: 'flex', gap: '0.5rem' }}>
         <button
           className={`${styles.button} ${styles.modeButton} ${inputMode === 'pen' ? styles.active : ''}`}
-          onClick={() => inputMode !== 'pen' && toggleInputMode()}
+          onClick={() => inputMode !== 'pen' && !isPaused && toggleInputMode()}
+          disabled={isPaused}
           aria-label="Pen mode"
           aria-pressed={inputMode === 'pen'}
         >
@@ -86,7 +87,8 @@ export const Controls: React.FC = () => {
         </button>
         <button
           className={`${styles.button} ${styles.modeButton} ${inputMode === 'pencil' ? styles.active : ''}`}
-          onClick={() => inputMode !== 'pencil' && toggleInputMode()}
+          onClick={() => inputMode !== 'pencil' && !isPaused && toggleInputMode()}
+          disabled={isPaused}
           aria-label="Pencil mode"
           aria-pressed={inputMode === 'pencil'}
         >
@@ -99,7 +101,7 @@ export const Controls: React.FC = () => {
         <button
           className={`${styles.button} ${styles.secondaryButton}`}
           onClick={undo}
-          disabled={!canUndo}
+          disabled={!canUndo || isPaused}
           aria-label="Undo"
         >
           ↶ Undo
@@ -107,7 +109,7 @@ export const Controls: React.FC = () => {
         <button
           className={`${styles.button} ${styles.secondaryButton}`}
           onClick={redo}
-          disabled={!canRedo}
+          disabled={!canRedo || isPaused}
           aria-label="Redo"
         >
           ↷ Redo

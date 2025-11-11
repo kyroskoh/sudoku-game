@@ -16,6 +16,7 @@ export const Grid: React.FC = () => {
     settings,
     isComplete,
     hasStarted,
+    isPaused,
     selectCell,
     setCellValue,
     toggleNote,
@@ -141,14 +142,14 @@ export const Grid: React.FC = () => {
   };
 
   const handleCellClick = (row: number, col: number) => {
-    // Don't allow interaction until game has started
-    if (!hasStarted) return;
+    // Don't allow interaction until game has started or if paused
+    if (!hasStarted || isPaused) return;
     selectCell(row, col);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    // Don't allow keyboard input until game has started
-    if (!hasStarted) return;
+    // Don't allow keyboard input until game has started or if paused
+    if (!hasStarted || isPaused) return;
     if (!selectedCell) return;
 
     const { row, col } = selectedCell;
