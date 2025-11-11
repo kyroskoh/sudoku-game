@@ -166,7 +166,7 @@ sudoku-game/
    - Use the number pad or keyboard (1-9) to enter numbers
    - Toggle between Pen ✏️ (permanent) and Pencil ✎ (notes) modes
    - Press Backspace or ✕ to erase
-4. **Use Controls**:
+5. **Use Controls**:
    - Undo/Redo your moves
    - Pause the game (timer freezes, no input allowed)
    - Track your time and mistakes
