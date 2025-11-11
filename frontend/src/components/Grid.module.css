@@ -241,70 +241,85 @@
 }
 
 /* Theme-specific duplicate styling for normal themes */
+/* Light themes: Use dark colors for contrast */
 [data-theme="classic"] .cell.duplicate {
-  border-color: #f44336 !important;
-  box-shadow: inset 0 0 0 1px rgba(244, 67, 54, 0.4);
-}
-
-[data-theme="dark"] .cell.duplicate {
-  border-color: #ef5350 !important;
-  box-shadow: inset 0 0 0 1px rgba(239, 83, 80, 0.5);
+  border-color: #c62828 !important; /* Dark red for light background */
+  box-shadow: inset 0 0 0 1px rgba(198, 40, 40, 0.5);
 }
 
 [data-theme="ocean"] .cell.duplicate {
-  border-color: #e53935 !important;
-  box-shadow: inset 0 0 0 1px rgba(229, 57, 53, 0.4);
+  border-color: #b71c1c !important; /* Dark red for light background */
+  box-shadow: inset 0 0 0 1px rgba(183, 28, 28, 0.5);
 }
 
 [data-theme="forest"] .cell.duplicate {
-  border-color: #d32f2f !important;
-  box-shadow: inset 0 0 0 1px rgba(211, 47, 47, 0.4);
+  border-color: #c62828 !important; /* Dark red for light background */
+  box-shadow: inset 0 0 0 1px rgba(198, 40, 40, 0.5);
 }
 
 [data-theme="sunset"] .cell.duplicate {
-  border-color: #d84315 !important;
-  box-shadow: inset 0 0 0 1px rgba(216, 67, 21, 0.4);
-}
-
-[data-theme="midnight"] .cell.duplicate {
-  border-color: #ef5350 !important;
-  box-shadow: inset 0 0 0 1px rgba(239, 83, 80, 0.5);
+  border-color: #bf360c !important; /* Dark red-orange for light background */
+  box-shadow: inset 0 0 0 1px rgba(191, 54, 12, 0.5);
 }
 
 [data-theme="lavender"] .cell.duplicate {
-  border-color: #c2185b !important;
-  box-shadow: inset 0 0 0 1px rgba(194, 24, 91, 0.4);
+  border-color: #ad1457 !important; /* Dark pink-red for light background */
+  box-shadow: inset 0 0 0 1px rgba(173, 20, 87, 0.5);
 }
 
 [data-theme="autumn"] .cell.duplicate {
-  border-color: #d84315 !important;
-  box-shadow: inset 0 0 0 1px rgba(216, 67, 21, 0.4);
+  border-color: #bf360c !important; /* Dark red-orange for light background */
+  box-shadow: inset 0 0 0 1px rgba(191, 54, 12, 0.5);
+}
+
+/* Dark themes: Use bright colors for contrast */
+[data-theme="dark"] .cell.duplicate {
+  border-color: #ff5252 !important; /* Bright red for dark background */
+  box-shadow: inset 0 0 0 1px rgba(255, 82, 82, 0.6);
+}
+
+[data-theme="midnight"] .cell.duplicate {
+  border-color: #ff5252 !important; /* Bright red for dark background */
+  box-shadow: inset 0 0 0 1px rgba(255, 82, 82, 0.6);
 }
 
 /* Colorblind-friendly duplicate styling - use orange for better visibility */
+/* Light colorblind themes: Use dark orange */
 [data-theme="colorblind-blue"] .cell.duplicate,
-[data-theme="colorblind-yellow"] .cell.duplicate,
+[data-theme="colorblind-yellow"] .cell.duplicate {
+  background-color: rgba(255, 102, 0, 0.2);
+  border: 3px dashed #cc5200 !important; /* Dark orange for light background */
+  box-shadow: inset 0 0 0 1px rgba(204, 82, 0, 0.6);
+}
+
+/* Dark colorblind themes: Use bright orange */
 [data-theme="colorblind-dark-blue"] .cell.duplicate,
 [data-theme="colorblind-dark-yellow"] .cell.duplicate {
-  background-color: rgba(255, 102, 0, 0.2);
-  border: 3px dashed #ff6600 !important;
-  box-shadow: inset 0 0 0 1px rgba(255, 102, 0, 0.5);
+  background-color: rgba(255, 102, 0, 0.25);
+  border: 3px dashed #ff8800 !important; /* Bright orange for dark background */
+  box-shadow: inset 0 0 0 1px rgba(255, 136, 0, 0.7);
 }
 
-/* High contrast themes - use thick black dashed border */
+/* High contrast themes - light: black, dark: white */
 [data-theme="colorblind-high-contrast"] .cell.duplicate,
-[data-theme="colorblind-monochrome"] .cell.duplicate,
-[data-theme="colorblind-dark-monochrome"] .cell.duplicate {
+[data-theme="colorblind-monochrome"] .cell.duplicate {
   background-color: rgba(0, 0, 0, 0.15);
-  border: 4px dashed #000000 !important;
-  box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.3);
+  border: 4px dashed #000000 !important; /* Black for light background */
+  box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.4);
 }
 
-/* Sepia theme - use darker brown */
+/* Dark monochrome: Use bright white/light gray */
+[data-theme="colorblind-dark-monochrome"] .cell.duplicate {
+  background-color: rgba(255, 255, 255, 0.15);
+  border: 4px dashed #ffffff !important; /* White for dark background */
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.5);
+}
+
+/* Sepia theme - light background: use dark brown */
 [data-theme="colorblind-sepia"] .cell.duplicate {
   background-color: rgba(141, 110, 99, 0.2);
-  border: 3px dashed #6d4c41 !important;
-  box-shadow: inset 0 0 0 1px rgba(109, 76, 65, 0.5);
+  border: 3px dashed #5d4037 !important; /* Dark brown for light background */
+  box-shadow: inset 0 0 0 1px rgba(93, 64, 55, 0.6);
 }
 
 .cell.correctRow,
