@@ -11,24 +11,44 @@ export const SettingsPage: React.FC = () => {
   const navigate = useNavigate();
   const { settings, updateSettings } = useGameStore();
 
+  const normalThemes = ['classic', 'dark', 'ocean', 'forest'];
+  const colorblindThemes = ['colorblind-blue', 'colorblind-high-contrast', 'colorblind-yellow', 'colorblind-monochrome'];
+
   const handleColorblindModeToggle = (enabled: boolean) => {
+    const isCurrentlyColorblind = colorblindThemes.includes(settings.theme as any);
+    
     updateSettings({ 
       colorblindMode: enabled,
-      // When enabling colorblind mode, switch to colorblind theme
-      // When disabling, keep current theme or switch to classic
-      theme: enabled ? 'colorblind' : (settings.theme === 'colorblind' ? 'classic' : settings.theme)
+      // When enabling colorblind mode, switch to first colorblind theme if not already one
+      // When disabling, switch to classic if currently on colorblind theme
+      theme: enabled 
+        ? (isCurrentlyColorblind ? settings.theme : 'colorblind-blue')
+        : (isCurrentlyColorblind ? 'classic' : settings.theme)
     });
+    
     // Update theme attribute immediately
-    document.documentElement.setAttribute('data-theme', enabled ? 'colorblind' : (settings.theme === 'colorblind' ? 'classic' : settings.theme));
+    const newTheme = enabled 
+      ? (isCurrentlyColorblind ? settings.theme : 'colorblind-blue')
+      : (isCurrentlyColorblind ? 'classic' : settings.theme);
+    document.documentElement.setAttribute('data-theme', newTheme);
   };
 
   const handleThemeChange = (theme: string) => {
-    // Don't allow theme change if colorblind mode is enabled
-    if (settings.colorblindMode) {
-      return;
+    // Only allow themes that match the current colorblind mode setting
+    const isColorblindTheme = colorblindThemes.includes(theme);
+    if (settings.colorblindMode && !isColorblindTheme) {
+      return; // Don't allow non-colorblind themes when colorblind mode is enabled
     }
+    if (!settings.colorblindMode && isColorblindTheme) {
+      return; // Don't allow colorblind themes when colorblind mode is disabled
+    }
+    
     updateSettings({ theme: theme as any });
     document.documentElement.setAttribute('data-theme', theme);
+  };
+
+  const getAvailableThemes = () => {
+    return settings.colorblindMode ? colorblindThemes : normalThemes;
   };
 
   return (
@@ -56,7 +76,7 @@ export const SettingsPage: React.FC = () => {
                   Colorblind Mode
                 </label>
                 <p className={styles.settingDescription}>
-                  Enable colorblind-friendly theme. When enabled, the app will use the colorblind theme exclusively.
+                  Enable colorblind-friendly themes. When enabled, only colorblind-optimized themes will be available.
                 </p>
               </div>
               <div className={styles.settingControl}>
@@ -82,25 +102,37 @@ export const SettingsPage: React.FC = () => {
                 <label className={styles.settingLabel}>Theme</label>
                 <p className={styles.settingDescription}>
                   {settings.colorblindMode 
-                    ? 'Colorblind mode is enabled. Theme is locked to Colorblind.'
+                    ? 'Choose from colorblind-friendly themes optimized for accessibility.'
                     : 'Choose your preferred color theme.'}
                 </p>
               </div>
               <div className={styles.settingControl}>
                 <div className={styles.themeSelector}>
-                  {['classic', 'dark', 'ocean', 'forest', 'colorblind'].map((theme) => (
-                    <button
-                      key={theme}
-                      className={`${styles.themeButton} ${
-                        settings.theme === theme ? styles.themeButtonActive : ''
-                      } ${settings.colorblindMode && theme !== 'colorblind' ? styles.themeButtonDisabled : ''}`}
-                      onClick={() => handleThemeChange(theme)}
-                      disabled={settings.colorblindMode && theme !== 'colorblind'}
-                      title={settings.colorblindMode && theme !== 'colorblind' ? 'Disabled in colorblind mode' : theme}
-                    >
-                      {theme.charAt(0).toUpperCase() + theme.slice(1)}
-                    </button>
-                  ))}
+                  {getAvailableThemes().map((theme) => {
+                    const themeLabels: Record<string, string> = {
+                      'classic': 'Classic',
+                      'dark': 'Dark',
+                      'ocean': 'Ocean',
+                      'forest': 'Forest',
+                      'colorblind-blue': 'Blue-Orange',
+                      'colorblind-high-contrast': 'High Contrast',
+                      'colorblind-yellow': 'Blue-Yellow',
+                      'colorblind-monochrome': 'Monochrome'
+                    };
+                    
+                    return (
+                      <button
+                        key={theme}
+                        className={`${styles.themeButton} ${
+                          settings.theme === theme ? styles.themeButtonActive : ''
+                        }`}
+                        onClick={() => handleThemeChange(theme)}
+                        title={themeLabels[theme] || theme}
+                      >
+                        {themeLabels[theme] || theme}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
             </div>

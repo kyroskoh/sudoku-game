@@ -21,8 +21,21 @@ function App() {
   const { settings } = useGameStore();
 
   useEffect(() => {
-    // Set initial theme (respect colorblind mode)
-    const theme = settings.colorblindMode ? 'colorblind' : settings.theme;
+    // Set initial theme
+    // If colorblind mode is enabled but theme is not a colorblind theme, switch to first colorblind theme
+    const colorblindThemes = ['colorblind-blue', 'colorblind-high-contrast', 'colorblind-yellow', 'colorblind-monochrome'];
+    let theme = settings.theme;
+    
+    if (settings.colorblindMode && !colorblindThemes.includes(theme)) {
+      theme = 'colorblind-blue';
+      // Update settings if needed
+      if (settings.theme !== theme) {
+        // This will be handled by the store update
+      }
+    } else if (!settings.colorblindMode && colorblindThemes.includes(theme)) {
+      theme = 'classic';
+    }
+    
     document.documentElement.setAttribute('data-theme', theme);
 
     // Start sync service
@@ -34,8 +47,17 @@ function App() {
   }, []);
 
   useEffect(() => {
-    // Update theme when it changes (respect colorblind mode)
-    const theme = settings.colorblindMode ? 'colorblind' : settings.theme;
+    // Update theme when it changes
+    // Ensure theme matches colorblind mode setting
+    const colorblindThemes = ['colorblind-blue', 'colorblind-high-contrast', 'colorblind-yellow', 'colorblind-monochrome'];
+    let theme = settings.theme;
+    
+    if (settings.colorblindMode && !colorblindThemes.includes(theme)) {
+      theme = 'colorblind-blue';
+    } else if (!settings.colorblindMode && colorblindThemes.includes(theme)) {
+      theme = 'classic';
+    }
+    
     document.documentElement.setAttribute('data-theme', theme);
   }, [settings.theme, settings.colorblindMode]);
 

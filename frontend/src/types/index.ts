@@ -5,7 +5,7 @@
 export type Difficulty = 'easy' | 'medium' | 'hard' | 'expert' | 'extreme';
 export type GameMode = 'casual' | 'daily' | 'challenge' | 'speed';
 export type InputMode = 'pen' | 'pencil';
-export type Theme = 'classic' | 'dark' | 'ocean' | 'forest' | 'colorblind';
+export type Theme = 'classic' | 'dark' | 'ocean' | 'forest' | 'colorblind-blue' | 'colorblind-high-contrast' | 'colorblind-yellow' | 'colorblind-monochrome';
 
 export type SudokuBoard = number[][];
 export type NotesBoard = Set<number>[][];

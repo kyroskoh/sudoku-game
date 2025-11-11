@@ -16,7 +16,8 @@ export const Header: React.FC = () => {
   const [deviceId, setDeviceId] = useState('');
   const [displayName, setDisplayName] = useState('');
 
-  const themes: Theme[] = ['classic', 'dark', 'ocean', 'forest', 'colorblind'];
+  const normalThemes: Theme[] = ['classic', 'dark', 'ocean', 'forest'];
+  const colorblindThemes: Theme[] = ['colorblind-blue', 'colorblind-high-contrast', 'colorblind-yellow', 'colorblind-monochrome'];
 
   // Check for ?showid=true in URL
   useEffect(() => {
@@ -32,17 +33,21 @@ export const Header: React.FC = () => {
   }, [location]);
 
   const cycleTheme = () => {
-    // If colorblind mode is enabled, don't cycle themes - always use colorblind theme
-    if (settings.colorblindMode) {
-      updateSettings({ theme: 'colorblind' });
-      document.documentElement.setAttribute('data-theme', 'colorblind');
-      return;
+    // Get appropriate theme list based on colorblind mode
+    const availableThemes = settings.colorblindMode ? colorblindThemes : normalThemes;
+    
+    // Find current theme in available themes, or default to first
+    let currentIndex = availableThemes.indexOf(settings.theme as Theme);
+    if (currentIndex === -1) {
+      // Current theme not in available list, use first theme
+      currentIndex = 0;
     }
     
-    const currentIndex = themes.indexOf(settings.theme);
-    const nextIndex = (currentIndex + 1) % themes.length;
-    updateSettings({ theme: themes[nextIndex] });
-    document.documentElement.setAttribute('data-theme', themes[nextIndex]);
+    const nextIndex = (currentIndex + 1) % availableThemes.length;
+    const nextTheme = availableThemes[nextIndex];
+    
+    updateSettings({ theme: nextTheme });
+    document.documentElement.setAttribute('data-theme', nextTheme);
   };
 
   const isActive = (path: string) => location.pathname === path;

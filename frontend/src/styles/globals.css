@@ -75,9 +75,9 @@
   --note-color: #9ccc65;
 }
 
-[data-theme="colorblind"] {
-  /* High contrast colorblind-friendly theme */
-  /* Uses blue-yellow palette and high contrast for maximum accessibility */
+[data-theme="colorblind-blue"] {
+  /* Blue-Orange-Purple colorblind-friendly theme */
+  /* Works well for most colorblind types */
   --bg-primary: #ffffff;
   --bg-secondary: #f0f0f0;
   --bg-tertiary: #e0e0e0;
@@ -88,12 +88,78 @@
   --selected-color: #b3d9ff;
   --given-color: #0066cc;
   --user-color: #000000;
-  /* Use orange/yellow for errors (distinguishable from blue) */
+  /* Use orange for errors (distinguishable from blue) */
   --error-color: #ff6600;
-  /* Use purple/violet for success (distinguishable from blue) */
+  /* Use purple for success (distinguishable from blue) */
   --success-color: #6633cc;
   --button-primary: #0066cc;
   --button-hover: #0052a3;
+  --note-color: #666666;
+}
+
+[data-theme="colorblind-high-contrast"] {
+  /* Maximum contrast black/white theme */
+  /* Best for severe colorblindness and low vision */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f5f5f5;
+  --bg-tertiary: #e8e8e8;
+  --text-primary: #000000;
+  --text-secondary: #1a1a1a;
+  --border-color: #000000;
+  --highlight-color: #e0e0e0;
+  --selected-color: #cccccc;
+  --given-color: #000000;
+  --user-color: #000000;
+  /* Use dark gray/black patterns for errors */
+  --error-color: #333333;
+  /* Use medium gray for success */
+  --success-color: #666666;
+  --button-primary: #000000;
+  --button-hover: #333333;
+  --note-color: #666666;
+}
+
+[data-theme="colorblind-yellow"] {
+  /* Blue-Yellow colorblind-friendly theme */
+  /* Works well for red-green colorblind users */
+  --bg-primary: #fffef0;
+  --bg-secondary: #fff9d0;
+  --bg-tertiary: #fff4a0;
+  --text-primary: #000080;
+  --text-secondary: #1a1a80;
+  --border-color: #4a4a80;
+  --highlight-color: #e6f0ff;
+  --selected-color: #b3d9ff;
+  --given-color: #0000cc;
+  --user-color: #000080;
+  /* Use yellow/orange for errors */
+  --error-color: #ffaa00;
+  /* Use darker blue for success */
+  --success-color: #0066ff;
+  --button-primary: #0000cc;
+  --button-hover: #000099;
+  --note-color: #4a4a80;
+}
+
+[data-theme="colorblind-monochrome"] {
+  /* Grayscale theme with different shades */
+  /* Relies on contrast rather than color */
+  --bg-primary: #ffffff;
+  --bg-secondary: #e8e8e8;
+  --bg-tertiary: #d0d0d0;
+  --text-primary: #000000;
+  --text-secondary: #333333;
+  --border-color: #666666;
+  --highlight-color: #f0f0f0;
+  --selected-color: #d8d8d8;
+  --given-color: #000000;
+  --user-color: #000000;
+  /* Use dark gray for errors */
+  --error-color: #4a4a4a;
+  /* Use medium gray for success */
+  --success-color: #808080;
+  --button-primary: #333333;
+  --button-hover: #1a1a1a;
   --note-color: #666666;
 }
 
