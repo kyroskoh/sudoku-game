@@ -18,7 +18,8 @@ A modern, feature-rich Sudoku game built with React, TypeScript, Node.js, and SQ
 - 💡 **Smart Hints**: Get help when you're stuck
 - ⏱️ **Timer & Stats**: Track your progress and best times
 - ✅ **Visual Feedback**: Green flash animation when rows, columns, or boxes are correctly completed (validated against solution)
-- 🎨 **Multiple Themes**: Classic, Dark, Ocean, Forest, Colorblind-friendly
+- 🎨 **Multiple Themes**: 4 normal themes + 4 colorblind-friendly themes with smart filtering
+- ⚙️ **Settings System**: Customize your experience with accessibility options
 - 📱 **Responsive Design**: Play on desktop, tablet, or mobile
 - 💾 **Auto-Save**: Progress is automatically saved locally
 - 🌐 **Offline Support**: Play without an internet connection
@@ -35,7 +36,12 @@ A modern, feature-rich Sudoku game built with React, TypeScript, Node.js, and SQ
 - Keyboard-first navigation
 - ARIA labels and roles
 - High-contrast themes
-- **Colorblind-friendly theme**: Designed for users with color vision deficiencies
+- **Colorblind Mode**: Toggle to enable 4 colorblind-optimized themes
+  - **Blue-Orange**: Blue-orange-purple palette for most colorblind types
+  - **High Contrast**: Maximum contrast black/white for severe colorblindness
+  - **Blue-Yellow**: Blue-yellow palette optimized for red-green colorblind users
+  - **Monochrome**: Grayscale theme with contrast-based indicators
+- Smart theme filtering: Only shows relevant themes based on colorblind mode setting
 - Screen reader friendly
 
 ## 🏗️ Architecture
@@ -178,14 +184,27 @@ sudoku-game/
 
 ## 🎨 Themes
 
-Sudoku Mastery includes 5 beautiful themes:
+Sudoku Mastery includes 8 beautiful themes organized into two categories:
+
+### Normal Themes (4)
 - **Classic**: Traditional light theme
 - **Dark**: Easy on the eyes for night play
 - **Ocean**: Calming blue-green tones
 - **Forest**: Natural green palette
-- **Colorblind**: High-contrast, colorblind-friendly theme with blue-orange-purple palette
 
-Click the "🎨 Theme" button in the header to cycle through themes.
+### Colorblind-Friendly Themes (4)
+Enable Colorblind Mode in Settings to access these accessibility-optimized themes:
+- **Blue-Orange**: Blue-orange-purple palette that works well for most colorblind types
+- **High Contrast**: Maximum contrast black/white theme for severe colorblindness and low vision
+- **Blue-Yellow**: Blue-yellow palette optimized for red-green colorblind users
+- **Monochrome**: Grayscale theme that relies on contrast rather than color
+
+**How it works:**
+- Click the "🎨 Theme" button in the header to cycle through themes
+- Themes shown depend on your Colorblind Mode setting (toggle in ⚙️ Settings)
+- When Colorblind Mode is enabled, only colorblind-friendly themes are available
+- When Colorblind Mode is disabled, only normal themes are available
+- This smart filtering ensures you only see themes appropriate for your needs
 
 ## 🔧 API Endpoints
 
