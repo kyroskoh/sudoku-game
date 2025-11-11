@@ -10,6 +10,7 @@ A modern, feature-rich Sudoku game built with React, TypeScript, Node.js, and SQ
 - **Casual Mode**: Practice with progressive difficulty levels (Easy → Extreme)
 - **Daily Puzzle**: One puzzle per day with streak tracking
 - **Challenge Mode**: Test your skills with special constraints
+- **⚡ Speed Mode** (Coming Soon): Race against the clock with time limits and bonus points
 
 ### 🎯 Core Features
 - ✏️ **Pen & Pencil Modes**: Switch between number entry and candidate notes
@@ -300,6 +301,19 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ## 🚀 Future Enhancements & Improvements
 
 We're constantly working to improve Sudoku Mastery! Here are some planned features and enhancements:
+
+### 🎮 New Game Modes
+- **⚡ Speed Mode**: Race against the clock with time limits per puzzle
+  - Time limits: Easy (5 min), Medium (10 min), Hard (15 min), Expert (20 min), Extreme (30 min)
+  - Bonus points for finishing early (e.g., 2x points if finished in half the time)
+  - Progressive difficulty: Start with Easy, unlock harder difficulties as you progress
+  - Speed streaks: Track consecutive speed solves completed within time limit
+  - Dedicated speed leaderboards: Ranked by fastest completion times
+  - Visual countdown timer with color-coded warnings (green → yellow → red)
+  - Time bonus multipliers: Faster completion = higher score multiplier
+  - Speed achievements: Unlock badges for speed milestones (e.g., "Lightning Fast", "Speed Demon")
+  - No pause option: Adds to the challenge and ensures fair competition
+  - Auto-submit on time expiry: Puzzle automatically submitted when time runs out
 
 ### 🎮 Gameplay Enhancements
 - **Advanced Solving Techniques**: Visual hints for advanced techniques (X-Wing, Swordfish, etc.)
