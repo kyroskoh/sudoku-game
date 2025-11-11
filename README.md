@@ -159,8 +159,9 @@ sudoku-game/
 ## 🎮 How to Play
 
 1. **Select a Game Mode**: Choose from Casual, Daily, Challenge, or Speed (coming soon)
-2. **Pick Your Difficulty**: Easy, Medium, Hard, Expert, or Extreme
-3. **Start Playing**: 
+2. **Customize Settings** (Optional): Visit ⚙️ Settings to enable Colorblind Mode or adjust preferences
+3. **Pick Your Difficulty**: Easy, Medium, Hard, Expert, or Extreme
+4. **Start Playing**: 
    - Click a cell to select it
    - Use the number pad or keyboard (1-9) to enter numbers
    - Toggle between Pen ✏️ (permanent) and Pencil ✎ (notes) modes
