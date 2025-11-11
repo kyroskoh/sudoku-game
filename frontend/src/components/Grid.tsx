@@ -2,7 +2,7 @@
  * Sudoku Grid Component
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useGameStore } from '../store/gameStore';
 import { api } from '../utils/api';
 import styles from './Grid.module.css';
@@ -27,6 +27,12 @@ export const Grid: React.FC = () => {
 
   const [showAnswers, setShowAnswers] = useState(false);
   const [solution, setSolution] = useState<number[][] | null>(null);
+  const [correctRows, setCorrectRows] = useState<Set<number>>(new Set());
+  const [correctCols, setCorrectCols] = useState<Set<number>>(new Set());
+  const [correctBoxes, setCorrectBoxes] = useState<Set<string>>(new Set());
+  const prevCorrectRowsRef = useRef<Set<number>>(new Set());
+  const prevCorrectColsRef = useRef<Set<number>>(new Set());
+  const prevCorrectBoxesRef = useRef<Set<string>>(new Set());
 
   // Check for ?showans=true in URL
   useEffect(() => {
@@ -101,6 +107,108 @@ export const Grid: React.FC = () => {
       }
     }
   }, [board, puzzle, isComplete, completeGame]);
+
+  // Check which rows, columns, and boxes are correct
+  useEffect(() => {
+    if (!puzzle || !hasStarted) {
+      setCorrectRows(new Set());
+      setCorrectCols(new Set());
+      setCorrectBoxes(new Set());
+      prevCorrectRowsRef.current = new Set();
+      prevCorrectColsRef.current = new Set();
+      prevCorrectBoxesRef.current = new Set();
+      return;
+    }
+
+    const newCorrectRows = new Set<number>();
+    const newCorrectCols = new Set<number>();
+    const newCorrectBoxes = new Set<string>();
+
+    // Check rows
+    for (let row = 0; row < 9; row++) {
+      const seen = new Set<number>();
+      let isComplete = true;
+      for (let col = 0; col < 9; col++) {
+        const value = board[row][col];
+        if (value === 0) {
+          isComplete = false;
+          break;
+        }
+        if (value < 1 || value > 9 || seen.has(value)) {
+          isComplete = false;
+          break;
+        }
+        seen.add(value);
+      }
+      if (isComplete && seen.size === 9) {
+        newCorrectRows.add(row);
+      }
+    }
+
+    // Check columns
+    for (let col = 0; col < 9; col++) {
+      const seen = new Set<number>();
+      let isComplete = true;
+      for (let row = 0; row < 9; row++) {
+        const value = board[row][col];
+        if (value === 0) {
+          isComplete = false;
+          break;
+        }
+        if (seen.has(value)) {
+          isComplete = false;
+          break;
+        }
+        seen.add(value);
+      }
+      if (isComplete && seen.size === 9) {
+        newCorrectCols.add(col);
+      }
+    }
+
+    // Check 3x3 boxes
+    for (let boxRow = 0; boxRow < 9; boxRow += 3) {
+      for (let boxCol = 0; boxCol < 9; boxCol += 3) {
+        const seen = new Set<number>();
+        let isComplete = true;
+        for (let i = 0; i < 3; i++) {
+          for (let j = 0; j < 3; j++) {
+            const value = board[boxRow + i][boxCol + j];
+            if (value === 0) {
+              isComplete = false;
+              break;
+            }
+            if (seen.has(value)) {
+              isComplete = false;
+              break;
+            }
+            seen.add(value);
+          }
+          if (!isComplete) break;
+        }
+        if (isComplete && seen.size === 9) {
+          newCorrectBoxes.add(`${boxRow}-${boxCol}`);
+        }
+      }
+    }
+
+    // Only update if there are changes to trigger flash animation
+    const rowsChanged = JSON.stringify(Array.from(newCorrectRows).sort()) !== 
+                       JSON.stringify(Array.from(prevCorrectRowsRef.current).sort());
+    const colsChanged = JSON.stringify(Array.from(newCorrectCols).sort()) !== 
+                       JSON.stringify(Array.from(prevCorrectColsRef.current).sort());
+    const boxesChanged = JSON.stringify(Array.from(newCorrectBoxes).sort()) !== 
+                        JSON.stringify(Array.from(prevCorrectBoxesRef.current).sort());
+
+    if (rowsChanged || colsChanged || boxesChanged) {
+      setCorrectRows(newCorrectRows);
+      setCorrectCols(newCorrectCols);
+      setCorrectBoxes(newCorrectBoxes);
+      prevCorrectRowsRef.current = newCorrectRows;
+      prevCorrectColsRef.current = newCorrectCols;
+      prevCorrectBoxesRef.current = newCorrectBoxes;
+    }
+  }, [board, puzzle, hasStarted]);
 
   // Validate the solution
   const checkSolution = (currentBoard: number[][]): boolean => {
@@ -209,6 +317,19 @@ export const Grid: React.FC = () => {
 
     if (isDuplicate(row, col)) {
       classes.push(styles.duplicate);
+    }
+
+    // Add correct line/box classes
+    if (correctRows.has(row)) {
+      classes.push(styles.correctRow);
+    }
+    if (correctCols.has(col)) {
+      classes.push(styles.correctCol);
+    }
+    const boxRow = Math.floor(row / 3) * 3;
+    const boxCol = Math.floor(col / 3) * 3;
+    if (correctBoxes.has(`${boxRow}-${boxCol}`)) {
+      classes.push(styles.correctBox);
     }
 
     return classes.join(' ');
