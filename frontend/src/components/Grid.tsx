@@ -362,6 +362,16 @@ export const Grid: React.FC = () => {
     return value === selectedValue && (row !== selectedCell.row || col !== selectedCell.col);
   };
 
+  const hasSelectedValueAsNote = (row: number, col: number): boolean => {
+    if (!selectedCell) return false;
+    const selectedValue = board[selectedCell.row][selectedCell.col];
+    if (selectedValue === 0) return false; // No value selected
+    
+    // Check if this cell has the selected value as a note
+    const cellNotes = notes[row][col];
+    return cellNotes.has(selectedValue);
+  };
+
   const isGiven = (row: number, col: number): boolean => {
     return puzzle.givens[row][col] !== 0;
   };
@@ -383,6 +393,10 @@ export const Grid: React.FC = () => {
 
     if (isDuplicate(row, col)) {
       classes.push(styles.duplicate);
+    }
+
+    if (hasSelectedValueAsNote(row, col)) {
+      classes.push(styles.hasNoteValue);
     }
 
     // Add correct line/box classes
@@ -423,11 +437,17 @@ export const Grid: React.FC = () => {
           value
         ) : cellNotes.size > 0 ? (
           <div className={styles.notes}>
-            {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(n => (
-              <div key={n} className={styles.note}>
-                {cellNotes.has(n) ? n : ''}
-              </div>
-            ))}
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(n => {
+              const isSelectedValue = selectedCell && board[selectedCell.row][selectedCell.col] === n;
+              return (
+                <div 
+                  key={n} 
+                  className={`${styles.note} ${isSelectedValue && cellNotes.has(n) ? styles.noteHighlighted : ''}`}
+                >
+                  {cellNotes.has(n) ? n : ''}
+                </div>
+              );
+            })}
           </div>
         ) : null}
         
