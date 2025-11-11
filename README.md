@@ -22,7 +22,7 @@ A modern, feature-rich Sudoku game built with React, TypeScript, Node.js, and SQ
 - 💾 **Auto-Save**: Progress is automatically saved locally
 - 🌐 **Offline Support**: Play without an internet connection
 - 🔄 **Background Sync**: Automatically sync your progress when online
-- 🏆 **Global Leaderboard**: Top 10 rankings per mode and difficulty
+- 🏆 **Global Leaderboard**: Top 10 rankings per mode and difficulty with YYYY-MM-DD date format
 - 👤 **Name Entry**: Submit your name to appear on leaderboards
 - 🌏 **Daily Puzzles**: One puzzle per day (per difficulty) with streak tracking
 - 🔐 **Secure Puzzles**: Salted seed generation prevents cheating
@@ -203,7 +203,7 @@ Click the "🎨 Theme" button in the header to cycle through themes.
 - `POST /api/sync` - Sync local attempts to server
 - `GET /api/stats?userId={id}&deviceId={id}` - Get user stats
 - `GET /api/leaderboard?puzzleId={id}` - Get leaderboard for specific puzzle
-- `GET /api/leaderboard/global?mode={mode}&difficulty={difficulty}&limit={limit}` - Get global leaderboard
+- `GET /api/leaderboard/global?mode={mode}&difficulty={difficulty}&limit={limit}` - Get global leaderboard (dates in YYYY-MM-DD format)
 
 ### Devices
 - `PUT /api/devices/:id` - Update device (e.g., display name)
