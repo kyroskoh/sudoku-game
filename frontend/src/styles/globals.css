@@ -180,7 +180,8 @@
   --text-primary: #bf360c;
   --text-secondary: #d84315;
   --border-color: #ff9800;
-  --highlight-color: #ffe0b2;
+  --highlight-color: #ffcc80; /* Darker orange for better contrast */
+  --highlight-text-color: #000000; /* Dark text for light highlight */
   --selected-color: #ffcc80;
   --given-color: #e65100;
   --user-color: #bf360c;
