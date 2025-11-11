@@ -11,8 +11,8 @@ export const SettingsPage: React.FC = () => {
   const navigate = useNavigate();
   const { settings, updateSettings } = useGameStore();
 
-  const normalThemes = ['classic', 'dark', 'ocean', 'forest'];
-  const colorblindThemes = ['colorblind-blue', 'colorblind-high-contrast', 'colorblind-yellow', 'colorblind-monochrome'];
+  const normalThemes = ['classic', 'dark', 'ocean', 'forest', 'sunset', 'midnight', 'lavender', 'autumn'];
+  const colorblindThemes = ['colorblind-blue', 'colorblind-high-contrast', 'colorblind-yellow', 'colorblind-monochrome', 'colorblind-dark-blue', 'colorblind-dark-yellow', 'colorblind-dark-monochrome', 'colorblind-sepia'];
 
   const handleColorblindModeToggle = (enabled: boolean) => {
     const isCurrentlyColorblind = colorblindThemes.includes(settings.theme as any);
@@ -114,10 +114,18 @@ export const SettingsPage: React.FC = () => {
                       'dark': 'Dark',
                       'ocean': 'Ocean',
                       'forest': 'Forest',
+                      'sunset': 'Sunset',
+                      'midnight': 'Midnight',
+                      'lavender': 'Lavender',
+                      'autumn': 'Autumn',
                       'colorblind-blue': 'Blue-Orange',
                       'colorblind-high-contrast': 'High Contrast',
                       'colorblind-yellow': 'Blue-Yellow',
-                      'colorblind-monochrome': 'Monochrome'
+                      'colorblind-monochrome': 'Monochrome',
+                      'colorblind-dark-blue': 'Dark Blue',
+                      'colorblind-dark-yellow': 'Dark Yellow',
+                      'colorblind-dark-monochrome': 'Dark Mono',
+                      'colorblind-sepia': 'Sepia'
                     };
                     
                     return (

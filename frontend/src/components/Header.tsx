@@ -16,8 +16,8 @@ export const Header: React.FC = () => {
   const [deviceId, setDeviceId] = useState('');
   const [displayName, setDisplayName] = useState('');
 
-  const normalThemes: Theme[] = ['classic', 'dark', 'ocean', 'forest'];
-  const colorblindThemes: Theme[] = ['colorblind-blue', 'colorblind-high-contrast', 'colorblind-yellow', 'colorblind-monochrome'];
+  const normalThemes: Theme[] = ['classic', 'dark', 'ocean', 'forest', 'sunset', 'midnight', 'lavender', 'autumn'];
+  const colorblindThemes: Theme[] = ['colorblind-blue', 'colorblind-high-contrast', 'colorblind-yellow', 'colorblind-monochrome', 'colorblind-dark-blue', 'colorblind-dark-yellow', 'colorblind-dark-monochrome', 'colorblind-sepia'];
 
   // Check for ?showid=true in URL
   useEffect(() => {

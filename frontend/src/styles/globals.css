@@ -163,6 +163,172 @@
   --note-color: #666666;
 }
 
+/* New Normal Themes */
+[data-theme="sunset"] {
+  /* Warm sunset theme with orange-red tones */
+  --bg-primary: #fff5e6;
+  --bg-secondary: #ffe0b2;
+  --bg-tertiary: #ffcc80;
+  --text-primary: #bf360c;
+  --text-secondary: #d84315;
+  --border-color: #ff9800;
+  --highlight-color: #ffe0b2;
+  --selected-color: #ffcc80;
+  --given-color: #e65100;
+  --user-color: #bf360c;
+  --error-color: #d32f2f;
+  --success-color: #388e3c;
+  --button-primary: #ff6f00;
+  --button-hover: #e65100;
+  --note-color: #ff9800;
+}
+
+[data-theme="midnight"] {
+  /* Deep dark blue theme for night play */
+  --bg-primary: #0d1b2a;
+  --bg-secondary: #1b263b;
+  --bg-tertiary: #415a77;
+  --text-primary: #e0e1dd;
+  --text-secondary: #c9c9c9;
+  --border-color: #778da9;
+  --highlight-color: #1b263b;
+  --selected-color: #415a77;
+  --given-color: #90caf9;
+  --user-color: #e0e1dd;
+  --error-color: #ef5350;
+  --success-color: #66bb6a;
+  --button-primary: #42a5f5;
+  --button-hover: #1e88e5;
+  --note-color: #778da9;
+}
+
+[data-theme="lavender"] {
+  /* Soft purple-lavender theme */
+  --bg-primary: #f3e5f5;
+  --bg-secondary: #e1bee7;
+  --bg-tertiary: #ce93d8;
+  --text-primary: #4a148c;
+  --text-secondary: #6a1b9a;
+  --border-color: #ba68c8;
+  --highlight-color: #e1bee7;
+  --selected-color: #ce93d8;
+  --given-color: #7b1fa2;
+  --user-color: #4a148c;
+  --error-color: #d32f2f;
+  --success-color: #388e3c;
+  --button-primary: #9c27b0;
+  --button-hover: #7b1fa2;
+  --note-color: #ba68c8;
+}
+
+[data-theme="autumn"] {
+  /* Warm autumn theme with brown-orange tones */
+  --bg-primary: #fff3e0;
+  --bg-secondary: #ffe0b2;
+  --bg-tertiary: #ffcc80;
+  --text-primary: #5d4037;
+  --text-secondary: #6d4c41;
+  --border-color: #a1887f;
+  --highlight-color: #ffe0b2;
+  --selected-color: #ffcc80;
+  --given-color: #8d6e63;
+  --user-color: #5d4037;
+  --error-color: #d32f2f;
+  --success-color: #388e3c;
+  --button-primary: #ff8f00;
+  --button-hover: #f57c00;
+  --note-color: #a1887f;
+}
+
+/* New Colorblind Themes */
+[data-theme="colorblind-dark-blue"] {
+  /* Dark blue colorblind-friendly theme */
+  /* Works well for most colorblind types in low-light conditions */
+  --bg-primary: #1a1a2e;
+  --bg-secondary: #16213e;
+  --bg-tertiary: #0f3460;
+  --text-primary: #e0e0e0;
+  --text-secondary: #b0b0b0;
+  --border-color: #533483;
+  --highlight-color: #16213e;
+  --selected-color: #0f3460;
+  --given-color: #66b3ff;
+  --user-color: #e0e0e0;
+  /* Use orange for errors (distinguishable from blue) */
+  --error-color: #ff8844;
+  /* Use purple for success (distinguishable from blue) */
+  --success-color: #9966ff;
+  --button-primary: #0066cc;
+  --button-hover: #0052a3;
+  --note-color: #533483;
+}
+
+[data-theme="colorblind-dark-yellow"] {
+  /* Dark blue-yellow colorblind-friendly theme */
+  /* Works well for red-green colorblind users in low-light */
+  --bg-primary: #1a1a1a;
+  --bg-secondary: #2d2d2d;
+  --bg-tertiary: #404040;
+  --text-primary: #ffff99;
+  --text-secondary: #ffffcc;
+  --border-color: #666633;
+  --highlight-color: #2d2d2d;
+  --selected-color: #404040;
+  --given-color: #66b3ff;
+  --user-color: #ffff99;
+  /* Use yellow/orange for errors */
+  --error-color: #ffaa00;
+  /* Use darker blue for success */
+  --success-color: #0066ff;
+  --button-primary: #0000cc;
+  --button-hover: #000099;
+  --note-color: #666633;
+}
+
+[data-theme="colorblind-dark-monochrome"] {
+  /* Dark grayscale theme with high contrast */
+  /* Best for severe colorblindness in dark environments */
+  --bg-primary: #1a1a1a;
+  --bg-secondary: #2d2d2d;
+  --bg-tertiary: #404040;
+  --text-primary: #e0e0e0;
+  --text-secondary: #b0b0b0;
+  --border-color: #666666;
+  --highlight-color: #2d2d2d;
+  --selected-color: #404040;
+  --given-color: #e0e0e0;
+  --user-color: #e0e0e0;
+  /* Use light gray for errors */
+  --error-color: #999999;
+  /* Use medium gray for success */
+  --success-color: #808080;
+  --button-primary: #666666;
+  --button-hover: #808080;
+  --note-color: #666666;
+}
+
+[data-theme="colorblind-sepia"] {
+  /* Sepia-toned colorblind-friendly theme */
+  /* Warm brown tones that work for colorblind users */
+  --bg-primary: #f5f1e8;
+  --bg-secondary: #e8dcc6;
+  --bg-tertiary: #d4c4a8;
+  --text-primary: #3e2723;
+  --text-secondary: #5d4037;
+  --border-color: #8d6e63;
+  --highlight-color: #e8dcc6;
+  --selected-color: #d4c4a8;
+  --given-color: #6d4c41;
+  --user-color: #3e2723;
+  /* Use darker brown for errors */
+  --error-color: #8d6e63;
+  /* Use medium brown for success */
+  --success-color: #a1887f;
+  --button-primary: #8d6e63;
+  --button-hover: #6d4c41;
+  --note-color: #8d6e63;
+}
+
 * {
   margin: 0;
   padding: 0;

@@ -23,7 +23,7 @@ function App() {
   useEffect(() => {
     // Set initial theme
     // If colorblind mode is enabled but theme is not a colorblind theme, switch to first colorblind theme
-    const colorblindThemes = ['colorblind-blue', 'colorblind-high-contrast', 'colorblind-yellow', 'colorblind-monochrome'];
+    const colorblindThemes = ['colorblind-blue', 'colorblind-high-contrast', 'colorblind-yellow', 'colorblind-monochrome', 'colorblind-dark-blue', 'colorblind-dark-yellow', 'colorblind-dark-monochrome', 'colorblind-sepia'];
     let theme = settings.theme;
     
     if (settings.colorblindMode && !colorblindThemes.includes(theme)) {
@@ -49,7 +49,7 @@ function App() {
   useEffect(() => {
     // Update theme when it changes
     // Ensure theme matches colorblind mode setting
-    const colorblindThemes = ['colorblind-blue', 'colorblind-high-contrast', 'colorblind-yellow', 'colorblind-monochrome'];
+    const colorblindThemes = ['colorblind-blue', 'colorblind-high-contrast', 'colorblind-yellow', 'colorblind-monochrome', 'colorblind-dark-blue', 'colorblind-dark-yellow', 'colorblind-dark-monochrome', 'colorblind-sepia'];
     let theme = settings.theme;
     
     if (settings.colorblindMode && !colorblindThemes.includes(theme)) {
