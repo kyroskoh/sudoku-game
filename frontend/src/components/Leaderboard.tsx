@@ -66,6 +66,14 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({
     return `${minutes}:${seconds.toString().padStart(2, '0')}`;
   };
 
+  const formatDate = (date: Date | string): string => {
+    const d = typeof date === 'string' ? new Date(date) : date;
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
   const getRankClass = (rank: number): string => {
     if (rank === 1) return styles.gold;
     if (rank === 2) return styles.silver;
@@ -146,7 +154,9 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({
               <th>Rank</th>
               <th>Player</th>
               <th>Time</th>
-              <th>Date</th>
+              <th title="Date format: YYYY-MM-DD" className={styles.dateHeader}>
+                Date
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -169,7 +179,7 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({
                   )}
                 </td>
                 <td className={styles.time}>{formatTime(entry.timeMs)}</td>
-                <td>{new Date(entry.createdAt).toLocaleDateString()}</td>
+                <td>{formatDate(entry.createdAt)}</td>
               </tr>
             ))}
           </tbody>
