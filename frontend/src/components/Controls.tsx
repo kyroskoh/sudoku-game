@@ -13,6 +13,8 @@ export const Controls: React.FC = () => {
     hintsUsed,
     startTime,
     isPaused,
+    pausedDuration,
+    pauseStartTime,
     isComplete,
     historyIndex,
     history,
@@ -26,14 +28,20 @@ export const Controls: React.FC = () => {
   const [elapsedTime, setElapsedTime] = useState(0);
 
   useEffect(() => {
-    if (!startTime || isPaused || isComplete) return;
+    if (!startTime || isComplete) return;
 
     const interval = setInterval(() => {
-      setElapsedTime(Date.now() - startTime);
+      let currentPauseDuration = pausedDuration;
+      // If currently paused, add the current pause duration
+      if (isPaused && pauseStartTime) {
+        currentPauseDuration += Date.now() - pauseStartTime;
+      }
+      // Calculate elapsed time excluding paused duration
+      setElapsedTime(Date.now() - startTime - currentPauseDuration);
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [startTime, isPaused, isComplete]);
+  }, [startTime, isPaused, pausedDuration, pauseStartTime, isComplete]);
 
   const formatTime = (ms: number): string => {
     const totalSeconds = Math.floor(ms / 1000);

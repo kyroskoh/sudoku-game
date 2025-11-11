@@ -20,7 +20,9 @@ export const CasualGame: React.FC = () => {
   const [showSelector, setShowSelector] = useState(true);
   const [showNameEntry, setShowNameEntry] = useState(false);
   const [completionAcknowledged, setCompletionAcknowledged] = useState(false);
-  const { puzzle, loadPuzzle, isComplete, resetGame } = useGameStore();
+  const [qualifiesForTop10, setQualifiesForTop10] = useState(false);
+  const [completionTime, setCompletionTime] = useState<number | null>(null);
+  const { puzzle, loadPuzzle, isComplete, resetGame, startTime, pausedDuration, pauseStartTime, isPaused } = useGameStore();
 
   // Clear puzzle when entering casual mode to show difficulty selection
   useEffect(() => {
@@ -28,13 +30,43 @@ export const CasualGame: React.FC = () => {
     setShowSelector(true);
   }, []);
 
-  // Show name entry modal when puzzle is completed (always show, pre-filled if name exists)
+  // Check top 10 qualification and show name entry modal when puzzle is completed
   useEffect(() => {
-    if (isComplete && !completionAcknowledged) {
-      // Always show name entry modal to allow name entry/update and resubmission
-      setShowNameEntry(true);
+    if (isComplete && !completionAcknowledged && puzzle) {
+      // Calculate completion time
+      let timeMs = 0;
+      if (startTime) {
+        let currentPauseDuration = pausedDuration;
+        if (isPaused && pauseStartTime) {
+          currentPauseDuration += Date.now() - pauseStartTime;
+        }
+        timeMs = Date.now() - startTime - currentPauseDuration;
+      }
+      setCompletionTime(timeMs);
+      
+      // Check if user qualifies for top 10
+      const checkTop10 = async () => {
+        try {
+          const qualifies = await api.qualifiesForTop10(puzzle.mode, puzzle.difficulty, timeMs);
+          setQualifiesForTop10(qualifies);
+          
+          // Only show name entry modal if user qualifies for top 10
+          if (qualifies) {
+            setShowNameEntry(true);
+          } else {
+            // Skip directly to completion modal
+            setCompletionAcknowledged(true);
+          }
+        } catch (error) {
+          console.error('Error checking top 10 qualification:', error);
+          // On error, show name entry modal to be safe
+          setShowNameEntry(true);
+        }
+      };
+      
+      checkTop10();
     }
-  }, [isComplete, completionAcknowledged]);
+  }, [isComplete, completionAcknowledged, puzzle, startTime, pausedDuration, pauseStartTime, isPaused]);
 
   const difficulties: Difficulty[] = ['easy', 'medium', 'hard', 'expert', 'extreme'];
 
@@ -76,6 +108,13 @@ export const CasualGame: React.FC = () => {
   const handleNameSkip = () => {
     setShowNameEntry(false);
     setCompletionAcknowledged(true);
+  };
+
+  const formatTime = (ms: number): string => {
+    const totalSeconds = Math.floor(ms / 1000);
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
   };
 
   if (loading) {
@@ -156,6 +195,18 @@ export const CasualGame: React.FC = () => {
             <h2 className={styles.modalTitle}>🎉 Congratulations!</h2>
             <p className={styles.modalStats}>
               You completed the {puzzle.difficulty} puzzle!
+              {completionTime && (
+                <>
+                  <br />
+                  <strong>Time: {formatTime(completionTime)}</strong>
+                </>
+              )}
+              {qualifiesForTop10 && (
+                <>
+                  <br />
+                  <span style={{ color: '#ffd700', fontWeight: 'bold' }}>🏆 Top 10 Leaderboard!</span>
+                </>
+              )}
             </p>
             <div className={styles.modalButtons}>
               <button className={styles.modalButton} onClick={handleNewGame}>

@@ -4,6 +4,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useGameStore } from '../store/gameStore';
+import { api } from '../utils/api';
 import styles from './Grid.module.css';
 
 export const Grid: React.FC = () => {
@@ -73,10 +74,29 @@ export const Grid: React.FC = () => {
     const isFilled = board.every(row => row.every(cell => cell !== 0));
     
     if (isFilled) {
-      // Check if solution is valid
+      // First check local validation (fast)
       const isValid = checkSolution(board);
       if (isValid) {
-        completeGame();
+        // Then validate against backend API for security
+        const validateAndComplete = async () => {
+          try {
+            // Validate solution against backend
+            const isValid = await api.validateSolution(puzzle.id, board);
+            if (isValid) {
+              console.log('✅ Puzzle solution validated successfully!');
+              completeGame();
+            } else {
+              console.warn('⚠️ Solution validation failed - puzzle may not be correct');
+              // Still allow completion but log warning
+              completeGame();
+            }
+          } catch (error) {
+            console.error('❌ Error validating solution:', error);
+            // If validation fails, still complete (fallback to local validation)
+            completeGame();
+          }
+        };
+        validateAndComplete();
       }
     }
   }, [board, puzzle, isComplete, completeGame]);

@@ -117,6 +117,33 @@ class ApiClient {
   }
 
   /**
+   * Check if a time qualifies for top 10 leaderboard
+   */
+  async qualifiesForTop10(mode: GameMode, difficulty: Difficulty, timeMs: number): Promise<boolean> {
+    try {
+      // Get current top 10 leaderboard
+      const leaderboard = await this.getGlobalLeaderboard(mode, difficulty, 10);
+      
+      // If less than 10 entries, automatically qualifies
+      if (leaderboard.length < 10) {
+        return true;
+      }
+      
+      // Check if time is faster than the 10th place time
+      const tenthPlaceTime = leaderboard[leaderboard.length - 1]?.timeMs;
+      if (!tenthPlaceTime) {
+        return true; // No entries, qualifies
+      }
+      
+      return timeMs < tenthPlaceTime;
+    } catch (error) {
+      console.error('Error checking top 10 qualification:', error);
+      // On error, assume qualifies to be safe
+      return true;
+    }
+  }
+
+  /**
    * Health check
    */
   async healthCheck(): Promise<{ status: string }> {

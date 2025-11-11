@@ -29,6 +29,8 @@ export interface GameState {
   hintsUsed: number;
   startTime: number | null;
   isPaused: boolean;
+  pausedDuration: number; // Total milliseconds paused (accumulated)
+  pauseStartTime: number | null; // When the current pause started
   isComplete: boolean;
   hasStarted: boolean; // Whether the user has clicked "I'm Ready"
   history: HistoryState[];

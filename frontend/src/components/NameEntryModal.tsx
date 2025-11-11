@@ -4,8 +4,9 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { getStoredName, storeName, getDeviceId } from '../utils/localStorage';
+import { getStoredName, storeName, getDeviceId, getSyncQueue } from '../utils/localStorage';
 import { deviceApi } from '../utils/deviceApi';
+import { api } from '../utils/api';
 import styles from './NameEntryModal.module.css';
 
 interface NameEntryModalProps {
@@ -64,6 +65,18 @@ export const NameEntryModal: React.FC<NameEntryModalProps> = ({
       // Update device on backend
       const deviceId = getDeviceId();
       await deviceApi.updateDevice(deviceId, trimmedName);
+      
+      // Sync attempts to update leaderboard with new name
+      try {
+        const queue = getSyncQueue();
+        if (queue.length > 0) {
+          await api.syncAttempts(queue, undefined, deviceId);
+          console.log('✅ Attempts synced after name update');
+        }
+      } catch (syncError) {
+        console.error('Error syncing attempts:', syncError);
+        // Continue even if sync fails
+      }
       
       onSubmit();
     } catch (error) {

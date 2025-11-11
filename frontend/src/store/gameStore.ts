@@ -63,6 +63,8 @@ export const useGameStore = create<GameStore>((set, get) => ({
   hintsUsed: 0,
   startTime: null,
   isPaused: false,
+  pausedDuration: 0,
+  pauseStartTime: null,
   isComplete: false,
   hasStarted: false,
   history: [],
@@ -83,6 +85,8 @@ export const useGameStore = create<GameStore>((set, get) => ({
       hintsUsed: 0,
       startTime: null,
       isPaused: false,
+      pausedDuration: 0,
+      pauseStartTime: null,
       isComplete: false,
       hasStarted: false, // Reset to show blur overlay
       history: [{ board: cloneBoard(board), notes: cloneNotes(notes) }],
@@ -242,7 +246,12 @@ export const useGameStore = create<GameStore>((set, get) => ({
   },
 
   startGame: () => {
-    set({ startTime: Date.now(), isPaused: false });
+    set({ 
+      startTime: Date.now(), 
+      isPaused: false,
+      pausedDuration: 0,
+      pauseStartTime: null
+    });
   },
 
   markAsReady: () => {
@@ -252,18 +261,45 @@ export const useGameStore = create<GameStore>((set, get) => ({
   },
 
   pauseGame: () => {
-    set({ isPaused: true });
+    const state = get();
+    // Only record pause start time if not already paused
+    if (!state.isPaused && state.startTime) {
+      set({ 
+        isPaused: true,
+        pauseStartTime: Date.now()
+      });
+    }
   },
 
   resumeGame: () => {
-    set({ isPaused: false });
+    const state = get();
+    if (state.isPaused && state.pauseStartTime) {
+      // Add the paused duration to the total
+      const currentPauseDuration = Date.now() - state.pauseStartTime;
+      set({ 
+        isPaused: false,
+        pausedDuration: state.pausedDuration + currentPauseDuration,
+        pauseStartTime: null
+      });
+    } else {
+      // If somehow paused without pauseStartTime, just resume
+      set({ isPaused: false, pauseStartTime: null });
+    }
   },
 
   completeGame: () => {
     const state = get();
     
-    // Calculate time
-    const timeMs = state.startTime ? Date.now() - state.startTime : 0;
+    // Calculate time (accounting for paused duration)
+    let timeMs = 0;
+    if (state.startTime) {
+      let currentPauseDuration = state.pausedDuration;
+      // If currently paused, add the current pause duration
+      if (state.isPaused && state.pauseStartTime) {
+        currentPauseDuration += Date.now() - state.pauseStartTime;
+      }
+      timeMs = Date.now() - state.startTime - currentPauseDuration;
+    }
     
     // Create attempt
     if (state.puzzle && state.startTime) {
@@ -303,6 +339,8 @@ export const useGameStore = create<GameStore>((set, get) => ({
         hintsUsed: 0,
         startTime: null,
         isPaused: false,
+        pausedDuration: 0,
+        pauseStartTime: null,
         isComplete: false,
         hasStarted: false,
         history: [],
