@@ -70,6 +70,41 @@
   z-index: 1;
 }
 
+/* Ensure selection is visible even when cell is in correct state */
+.cell.selected.correctRow,
+.cell.selected.correctCol,
+.cell.selected.correctBox {
+  background-color: var(--selected-color) !important;
+  outline: 4px solid var(--button-primary);
+  outline-offset: -4px;
+  box-shadow: 0 0 0 2px var(--button-primary), inset 0 0 0 2px rgba(76, 175, 80, 0.4);
+}
+
+/* Colorblind themes - selected + correct state */
+[data-theme="colorblind-blue"] .cell.selected.correctRow,
+[data-theme="colorblind-blue"] .cell.selected.correctCol,
+[data-theme="colorblind-blue"] .cell.selected.correctBox,
+[data-theme="colorblind-yellow"] .cell.selected.correctRow,
+[data-theme="colorblind-yellow"] .cell.selected.correctCol,
+[data-theme="colorblind-yellow"] .cell.selected.correctBox {
+  background-color: var(--selected-color) !important;
+  outline: 4px solid var(--button-primary);
+  outline-offset: -4px;
+  box-shadow: 0 0 0 2px var(--button-primary), inset 0 0 0 2px rgba(102, 51, 204, 0.4);
+}
+
+[data-theme="colorblind-high-contrast"] .cell.selected.correctRow,
+[data-theme="colorblind-high-contrast"] .cell.selected.correctCol,
+[data-theme="colorblind-high-contrast"] .cell.selected.correctBox,
+[data-theme="colorblind-monochrome"] .cell.selected.correctRow,
+[data-theme="colorblind-monochrome"] .cell.selected.correctCol,
+[data-theme="colorblind-monochrome"] .cell.selected.correctBox {
+  background-color: var(--selected-color) !important;
+  outline: 5px solid var(--button-primary);
+  outline-offset: -5px;
+  box-shadow: 0 0 0 3px var(--button-primary), inset 0 0 0 2px rgba(0, 0, 0, 0.3);
+}
+
 .cell.highlighted {
   background-color: var(--highlight-color);
 }
