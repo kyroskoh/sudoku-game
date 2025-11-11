@@ -32,6 +32,13 @@ export const Header: React.FC = () => {
   }, [location]);
 
   const cycleTheme = () => {
+    // If colorblind mode is enabled, don't cycle themes - always use colorblind theme
+    if (settings.colorblindMode) {
+      updateSettings({ theme: 'colorblind' });
+      document.documentElement.setAttribute('data-theme', 'colorblind');
+      return;
+    }
+    
     const currentIndex = themes.indexOf(settings.theme);
     const nextIndex = (currentIndex + 1) % themes.length;
     updateSettings({ theme: themes[nextIndex] });
@@ -89,6 +96,12 @@ export const Header: React.FC = () => {
             ⚡ Speed
           </span>
           <Link
+            to="/settings"
+            className={`${styles.navLink} ${isActive('/settings') ? styles.active : ''}`}
+          >
+            ⚙️ Settings
+          </Link>
+          <Link
             to="/leaderboard"
             className={`${styles.navLink} ${isActive('/leaderboard') ? styles.active : ''}`}
           >
@@ -98,6 +111,7 @@ export const Header: React.FC = () => {
             className={styles.themeButton}
             onClick={cycleTheme}
             aria-label="Change theme"
+            title={settings.colorblindMode ? 'Colorblind mode enabled - theme locked' : 'Change theme'}
           >
             🎨 Theme
           </button>

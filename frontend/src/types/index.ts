@@ -63,6 +63,7 @@ export interface Settings {
   highlightDuplicates: boolean;
   highlightRowCol: boolean;
   soundEnabled: boolean;
+  colorblindMode: boolean; // When enabled, forces colorblind theme
 }
 
 export interface Stats {

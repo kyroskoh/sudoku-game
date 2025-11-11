@@ -11,6 +11,7 @@ import { CasualGame } from './pages/CasualGame';
 import { DailyGame } from './pages/DailyGame';
 import { ChallengeGame } from './pages/ChallengeGame';
 import { SpeedModePage } from './pages/SpeedModePage';
+import { SettingsPage } from './pages/SettingsPage';
 import { LeaderboardPage } from './pages/LeaderboardPage';
 import { useGameStore } from './store/gameStore';
 import { syncService } from './utils/syncService';
@@ -20,8 +21,9 @@ function App() {
   const { settings } = useGameStore();
 
   useEffect(() => {
-    // Set initial theme
-    document.documentElement.setAttribute('data-theme', settings.theme);
+    // Set initial theme (respect colorblind mode)
+    const theme = settings.colorblindMode ? 'colorblind' : settings.theme;
+    document.documentElement.setAttribute('data-theme', theme);
 
     // Start sync service
     syncService.start();
@@ -32,9 +34,10 @@ function App() {
   }, []);
 
   useEffect(() => {
-    // Update theme when it changes
-    document.documentElement.setAttribute('data-theme', settings.theme);
-  }, [settings.theme]);
+    // Update theme when it changes (respect colorblind mode)
+    const theme = settings.colorblindMode ? 'colorblind' : settings.theme;
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [settings.theme, settings.colorblindMode]);
 
   return (
     <BrowserRouter>
@@ -45,6 +48,7 @@ function App() {
         <Route path="/daily" element={<DailyGame />} />
         <Route path="/challenge" element={<ChallengeGame />} />
         <Route path="/speed" element={<SpeedModePage />} />
+        <Route path="/settings" element={<SettingsPage />} />
         <Route path="/leaderboard" element={<LeaderboardPage />} />
       </Routes>
       <Footer />

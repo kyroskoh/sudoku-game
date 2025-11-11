@@ -41,7 +41,8 @@ export function getSettings(): Settings {
     autoNoteClear: true,
     highlightDuplicates: true,
     highlightRowCol: true,
-    soundEnabled: false
+    soundEnabled: false,
+    colorblindMode: false
   };
 }
 
